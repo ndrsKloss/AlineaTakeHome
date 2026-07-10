@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct AlineaTake_HomeApp: App {
     init() {
-        AppFonts.registerAll()
+        AlineaFonts.registerAll()
     }
 
     var body: some Scene {

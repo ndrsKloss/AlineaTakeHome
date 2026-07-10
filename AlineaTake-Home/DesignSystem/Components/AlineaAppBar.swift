@@ -9,7 +9,7 @@ import SwiftUI
 /// it stays visually centered regardless of the leading/trailing widths — this
 /// matches the amount screen, where the badge is centered while a back control
 /// sits on the left (design-spec §3.0).
-struct AppBar<Leading: View, Center: View, Trailing: View>: View {
+struct AlineaAppBar<Leading: View, Center: View, Trailing: View>: View {
     @ViewBuilder var leading: Leading
     @ViewBuilder var center: Center
     @ViewBuilder var trailing: Trailing
@@ -49,7 +49,7 @@ private enum Layout {
     ZStack(alignment: .top) {
         Color.backgroundPrimary.ignoresSafeArea()
 
-        AppBar {
+        AlineaAppBar {
             Button {} label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 18, weight: .semibold))

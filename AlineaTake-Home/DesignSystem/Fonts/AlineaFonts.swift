@@ -7,7 +7,7 @@ import Foundation
 /// programmatically with Core Text at launch instead of via `UIAppFonts`.
 /// Call `registerAll()` once, before any font is resolved (see the app entry
 /// point).
-enum AppFonts {
+enum AlineaFonts {
 
     /// PostScript names of the bundled faces (used with `UIFont(name:size:)`).
     enum Name {
