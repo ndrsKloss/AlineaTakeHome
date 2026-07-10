@@ -7,6 +7,10 @@ import Foundation
 protocol AmountEntryCoordinating {
     func goBack()
     func showReview()
+    #if DEBUG
+    /// Presents the DEBUG-only design-system catalog (dev tool).
+    func showTokenCatalog()
+    #endif
 }
 
 /// Translates Amount entry intents into routing calls.
@@ -28,4 +32,10 @@ final class AmountEntryCoordinator: AmountEntryCoordinating {
     func showReview() {
         // No Review destination yet — see AppRoute. Intentionally a no-op.
     }
+
+    #if DEBUG
+    func showTokenCatalog() {
+        router.push(.tokenCatalog)
+    }
+    #endif
 }

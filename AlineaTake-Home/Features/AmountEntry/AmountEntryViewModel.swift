@@ -20,4 +20,10 @@ final class AmountEntryViewModel {
     func didTapReview() {
         coordinator.showReview()
     }
+
+    #if DEBUG
+    func didTapDesignSystemCatalog() {
+        coordinator.showTokenCatalog()
+    }
+    #endif
 }

@@ -1,10 +1,47 @@
 #if DEBUG
 import SwiftUI
 
-/// Visual gallery of the design-system tokens (colors, type ramp, radii) for
-/// verification. DEBUG-only; not wired into the app entry.
+/// Visual gallery of the design-system tokens (colors, type ramp, radii) and
+/// components for verification. DEBUG-only; reached via the coordinator from the
+/// Amount screen's app bar.
 struct TokenCatalogView: View {
+    @State private var viewModel: TokenCatalogViewModel
+
+    init(viewModel: TokenCatalogViewModel) {
+        _viewModel = State(initialValue: viewModel)
+    }
+
     var body: some View {
+        VStack(spacing: 0) {
+            AlineaAppBar(
+                leading: {
+                    Button {
+                        viewModel.didTapBack()
+                    } label: {
+                        Image("ic_chevron")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                            .foregroundStyle(Color.textPrimary)
+                            .frame(width: 36, height: 36)
+                    }
+                    .accessibilityLabel(Text(verbatim: "Back"))
+                },
+                center: {
+                    Text(verbatim: "Design System")
+                        .textStyle(.title2)
+                        .foregroundStyle(Color.textPrimary)
+                }
+            )
+
+            gallery
+        }
+        .background(Color.backgroundPrimary.ignoresSafeArea())
+        .toolbar(.hidden, for: .navigationBar)
+        .preferredColorScheme(.dark) // dark-only surface
+    }
+
+    private var gallery: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: .spacingLarge) {
                 section("Colors") {
@@ -46,10 +83,6 @@ struct TokenCatalogView: View {
             }
             .padding(.spacingLarge)
         }
-        .background(Color.backgroundPrimary.ignoresSafeArea())
-        .navigationTitle("Design System")
-        .navigationBarTitleDisplayMode(.large)
-        .preferredColorScheme(.dark) // dark-only surface; keeps nav chrome legible
     }
 
     private func section(
@@ -83,7 +116,8 @@ struct TokenCatalogView: View {
 }
 
 #Preview {
-    TokenCatalogView()
-        .preferredColorScheme(.dark)
+    // A real `AppCoordinator` is a harmless no-op router here (pop on an empty
+    // path does nothing), so no dedicated mock is needed.
+    TokenCatalogView(viewModel: TokenCatalogViewModel(router: AppCoordinator()))
 }
 #endif

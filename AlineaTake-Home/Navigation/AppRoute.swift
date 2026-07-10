@@ -8,5 +8,8 @@ import Foundation
 /// destinations yet. New cases are added here as real flows are introduced;
 /// nothing else about the navigation wiring needs to change.
 enum AppRoute: Hashable {
-    // No destinations yet.
+    #if DEBUG
+    /// The DEBUG-only design-system catalog (dev tool; not shipped).
+    case tokenCatalog
+    #endif
 }

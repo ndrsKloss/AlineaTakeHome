@@ -34,10 +34,10 @@ struct AmountEntryView: View {
                     },
                     trailing: {
                         #if DEBUG
-                        // Developer-only shortcut to the design-system catalog.
-                        // Compiled out of release builds.
-                        NavigationLink {
-                            TokenCatalogView()
+                        // Developer-only shortcut to the design-system catalog,
+                        // routed through the coordinator. Compiled out of release.
+                        Button {
+                            viewModel.didTapDesignSystemCatalog()
                         } label: {
                             Image(systemName: "swatchpalette")
                                 .font(.system(size: 18, weight: .semibold))

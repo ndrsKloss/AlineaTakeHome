@@ -9,11 +9,16 @@ struct RootView: View {
     var body: some View {
         NavigationStack(path: $appCoordinator.path) {
             makeAmountEntryView()
-                .navigationDestination(for: AppRoute.self) { _ in
-                    // No destinations yet; AppRoute has no cases so this is
-                    // never invoked. Real routes resolve to views here.
-                    EmptyView()
+                // `AppRoute` has no cases in release builds, so there is nothing
+                // to resolve there — the destination is registered only in DEBUG.
+                #if DEBUG
+                .navigationDestination(for: AppRoute.self) { route in
+                    switch route {
+                    case .tokenCatalog:
+                        makeTokenCatalogView()
+                    }
                 }
+                #endif
         }
     }
 
@@ -22,6 +27,12 @@ struct RootView: View {
         let viewModel = AmountEntryViewModel(coordinator: coordinator)
         return AmountEntryView(viewModel: viewModel)
     }
+
+    #if DEBUG
+    private func makeTokenCatalogView() -> some View {
+        TokenCatalogView(viewModel: TokenCatalogViewModel(router: appCoordinator))
+    }
+    #endif
 }
 
 #Preview {
