@@ -44,28 +44,28 @@ extension AlineaTextStyle {
     /// Large amount display — GT Flexa Condensed Medium 100 / lh 1.0 / −2.
     static let display = AlineaTextStyle(
         font: customFont(AlineaFonts.Name.gtFlexaCondensedMedium, size: 100, relativeTo: .largeTitle),
-        tracking: -2,
+        tracking: 0,
         lineSpacing: 0
     )
 
     /// Title 2 Medium (Review label) — GT Flexa Condensed Medium 24 / lh 1.0 / −3.
     static let title2 = AlineaTextStyle(
         font: customFont(AlineaFonts.Name.gtFlexaCondensedMedium, size: 24, relativeTo: .title2),
-        tracking: -3,
+        tracking: 0,
         lineSpacing: 0
     )
 
     /// Keypad digits — SF Pro Medium 36.647 / −1.0994 (system font by design).
     static let keypadDigit = AlineaTextStyle(
-        font: scalableSystemFont(size: 36.647, weight: .medium, relativeTo: .title1),
-        tracking: -1.0994,
+        font: scalableSystemFont(size: 36, weight: .medium, relativeTo: .title1),
+        tracking: 0,
         lineSpacing: 0
     )
 
     /// Suggestion chip — Instrument Sans SemiCondensed Medium 17 / −0.17.
     static let chip = AlineaTextStyle(
         font: customFont(AlineaFonts.Name.instrumentSansSemiCondensedMedium, size: 17, relativeTo: .body),
-        tracking: -0.17,
+        tracking: 0,
         lineSpacing: 0
     )
 }
