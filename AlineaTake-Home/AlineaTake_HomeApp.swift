@@ -9,6 +9,10 @@ import SwiftUI
 
 @main
 struct AlineaTake_HomeApp: App {
+    init() {
+        AppFonts.registerAll()
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
