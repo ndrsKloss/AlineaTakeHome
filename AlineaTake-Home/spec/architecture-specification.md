@@ -298,6 +298,17 @@ Rule of thumb: an abstraction must earn its place by improving **testability** o
 
 ---
 
+## 16. Development Tooling & Required Skills
+
+Swift/SwiftUI-specific skills are available in the skills directory and **MUST** be used when doing the corresponding work, so that implementation follows current best practices and stays faithful to the design:
+
+- **`swiftui-pro:swiftui-pro`** — **MUST** be invoked before writing, modifying, or reviewing any SwiftUI code. It reviews SwiftUI for modern-API usage, maintainability, and performance. Use it for every view, view model, component, and design-system type in this project.
+- **`figma:figma-swiftui`** — **MUST** be used when translating a Figma design into SwiftUI (or pushing SwiftUI back to Figma). Load it alongside `figma:figma-use` for the code→design direction.
+- **`figma:figma-design-to-code`** — **SHOULD** be used when implementing a Figma screen or component as code (reading a node with the Figma MCP and adapting it), honoring this project's tokens, components, and conventions.
+- **`figma:figma-implement-motion`** — **SHOULD** be used when implementing the design's animated behaviors (e.g. the Review button's animated border, digit-change and bubble→button transitions — design-spec §10).
+
+These skills complement, and do not override, this architecture and the other `spec/` documents: when a skill's generic guidance conflicts with an approved decision here or in `design-specification.md` / `non-functional-requirements.md`, the project specifications win (see §Source-of-Truth priority in `CLAUDE.md`).
+
 ## Alignment with Existing Specifications & Open Decisions
 
 This architecture is consistent with, and defers to, the other `spec/` documents:
