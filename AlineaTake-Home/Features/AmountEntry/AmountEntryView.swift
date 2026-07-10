@@ -15,7 +15,7 @@ struct AmountEntryView: View {
 
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color.backgroundPrimary.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 AlineaAppBar(
@@ -78,6 +78,7 @@ struct AmountEntryView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
+        .preferredColorScheme(.dark) // dark-only design; keeps the status bar legible
     }
 }
 
