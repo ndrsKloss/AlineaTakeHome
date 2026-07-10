@@ -18,19 +18,36 @@ struct AmountEntryView: View {
             Color.black.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                AlineaAppBar(leading: {
-                    Button {
-                        viewModel.didTapBack()
-                    } label: {
-                        Image("ic_chevron")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 24, height: 24)
-                            .foregroundStyle(Color.textPrimary)
-                            .frame(width: 36, height: 36)
+                AlineaAppBar(
+                    leading: {
+                        Button {
+                            viewModel.didTapBack()
+                        } label: {
+                            Image("ic_chevron")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
+                                .foregroundStyle(Color.textPrimary)
+                                .frame(width: 36, height: 36)
+                        }
+                        .accessibilityLabel(Text("Back", comment: "Back action on the amount entry screen"))
+                    },
+                    trailing: {
+                        #if DEBUG
+                        // Developer-only shortcut to the design-system catalog.
+                        // Compiled out of release builds.
+                        NavigationLink {
+                            TokenCatalogView()
+                        } label: {
+                            Image(systemName: "swatchpalette")
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundStyle(Color.textPrimary)
+                                .frame(width: 36, height: 36)
+                        }
+                        .accessibilityLabel(Text(verbatim: "Design System catalog"))
+                        #endif
                     }
-                    .accessibilityLabel(Text("Back", comment: "Back action on the amount entry screen"))
-                })
+                )
 
                 Spacer()
 
@@ -57,6 +74,7 @@ struct AmountEntryView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         AmountEntryView(
@@ -66,3 +84,4 @@ struct AmountEntryView: View {
         )
     }
 }
+#endif
