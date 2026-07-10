@@ -34,10 +34,22 @@ struct TokenCatalogView: View {
                         radiusSample("round", .radiusRound)
                     }
                 }
+
+                section("Keypad key (AlineaNumber)") {
+                    HStack(spacing: 0) {
+                        AlineaNumber("1") {}
+                        AlineaNumber("2") {}
+                        AlineaNumber(".", isEnabled: false) {} // disabled decimal key
+                    }
+                    .frame(height: 64)
+                }
             }
             .padding(.spacingLarge)
         }
         .background(Color.backgroundPrimary.ignoresSafeArea())
+        .navigationTitle("Design System")
+        .navigationBarTitleDisplayMode(.large)
+        .preferredColorScheme(.dark) // dark-only surface; keeps nav chrome legible
     }
 
     private func section(
