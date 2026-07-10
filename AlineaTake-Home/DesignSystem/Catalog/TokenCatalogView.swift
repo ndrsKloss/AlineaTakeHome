@@ -56,7 +56,7 @@ struct TokenCatalogView: View {
                 }
 
                 section("Typography") {
-                    Text("Display 100").textStyle(.display).lineLimit(1).minimumScaleFactor(0.3)
+                    Text("Display 100").textStyle(.display)
                     Text("Title2 24").textStyle(.title2)
                     Text("Keypad 8").textStyle(.keypadDigit)
                     Text("Chip 17").textStyle(.chip)
@@ -76,9 +76,17 @@ struct TokenCatalogView: View {
                     HStack(spacing: 0) {
                         AlineaNumber("1") {}
                         AlineaNumber("2") {}
-                        AlineaNumber(".", isEnabled: false) {} // disabled decimal key
+                        AlineaNumber(".", isEnabled: false) {}
                     }
                     .frame(height: 64)
+                }
+
+                section("Keyboard (AlineaKeyboard)") {
+                    AlineaKeyboard(
+                        onDigit: { _ in },
+                        onDecimal: {},
+                        onDelete: {}
+                    )
                 }
             }
             .padding(.spacingLarge)
