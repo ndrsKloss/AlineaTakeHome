@@ -11,7 +11,7 @@ import SwiftUI
 struct AlineaTake_HomeApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
     }
 }
