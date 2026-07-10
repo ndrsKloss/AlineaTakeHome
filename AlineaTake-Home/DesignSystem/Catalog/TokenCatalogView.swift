@@ -38,7 +38,6 @@ struct TokenCatalogView: View {
         }
         .background(Color.backgroundPrimary.ignoresSafeArea())
         .toolbar(.hidden, for: .navigationBar)
-        .preferredColorScheme(.dark) // dark-only surface
     }
 
     private var gallery: some View {
@@ -79,6 +78,14 @@ struct TokenCatalogView: View {
                         AlineaNumber(".", isEnabled: false) {}
                     }
                     .frame(height: 64)
+                }
+
+                section("Suggestion chip (AlineaChip)") {
+                    HStack(spacing: .chipGap) {
+                        AlineaChip("$500") {}
+                        AlineaChip("$2,000") {}
+                        AlineaChip("$10,000") {}
+                    }
                 }
 
                 section("Keyboard (AlineaKeyboard)") {

@@ -18,60 +18,67 @@ extension Color {
 
 /// Semantic color roles — the vocabulary feature code and components use.
 ///
-/// Values are confirmed from the Figma design, which is **Dark-only**. The Light
-/// Mode palette is not yet defined (`FAD-THEME-a`); until it is, each role's
-/// Light value is a **placeholder equal to its Dark value** (marked below), which
-/// keeps the API adaptive without inventing a Light palette.
+/// **Dark** values are confirmed from the Figma design (Dark-only reference).
+/// **Light** values resolve `FAD-THEME-a`: there is no Figma Light design, so they
+/// are **derived** as a faithful re-theme that preserves the same hierarchy,
+/// emphasis, and semantic intent (`NFR-THEME-005`) at WCAG AA contrast
+/// (`NFR-THEME-006`). The per-role assumption is noted inline.
 ///
 /// Disabled / error roles are intentionally **not defined** — the design provides
 /// no values and they must not be invented (design-spec §12).
 extension Color {
 
-    /// Screen background. Dark: #18161F.
+    /// Screen background. Dark #18161F; Light #F4F3F8 (soft cool off-white).
     static let backgroundPrimary = Color(
-        light: .ink, // TODO(FAD-THEME-a): define Light value
+        light: .cloud,
         dark: .ink
     )
 
-    /// Primary text / icons. Dark: #FFFFFF.
+    /// Primary text / icons. Dark #FFFFFF; Light #18161F (near-black, ~15:1 on bg).
     static let textPrimary = Color(
-        light: .paletteWhite, // TODO(FAD-THEME-a)
+        light: .ink,
         dark: .paletteWhite
     )
 
-    /// Faint amount placeholder (`$0`). Dark: white ~4% (40% × 10% layer opacity).
+    /// Faint amount placeholder (`$0`). Dark: white ~4%. Light: ink @20% — light
+    /// backgrounds need more than 4% to read as a comparably faint, de-emphasized ghost.
     static let textPlaceholder = Color(
-        light: Color.paletteWhite.opacity(0.04), // TODO(FAD-THEME-a)
+        light: Color.ink.opacity(0.20),
         dark: Color.paletteWhite.opacity(0.04)
     )
 
-    /// Suggestion-chip surface. Dark: #23212C @ 75%.
+    /// Suggestion-chip surface. Dark #23212C @75%; Light: ink @8% (subtle elevated
+    /// grey pill; keeps the dark label legible).
     static let surfaceChip = Color(
-        light: Color.chipInk.opacity(0.75), // TODO(FAD-THEME-a)
+        light: Color.ink.opacity(0.08),
         dark: Color.chipInk.opacity(0.75)
     )
 
-    /// Brand gradient start (e.g. Review border). #B24DCC.
+    /// Brand gradient start (e.g. Review border). #B24DCC in both — brand identity
+    /// is appearance-independent and the mid-saturated magenta reads on either bg.
     static let brandGradientStart = Color(
-        light: .brandMagenta, // TODO(FAD-THEME-a)
+        light: .brandMagenta,
         dark: .brandMagenta
     )
 
-    /// Brand gradient end. #8955F9.
+    /// Brand gradient end. #8955F9 in both (see `brandGradientStart`).
     static let brandGradientEnd = Color(
-        light: .brandPurple, // TODO(FAD-THEME-a)
+        light: .brandPurple,
         dark: .brandPurple
     )
 
-    /// Label on a brand/on-white surface (Review pill text). #22212D.
+    /// Label on the primary button surface. Dark #22212D (on the white pill);
+    /// Light #FFFFFF (on the inverted dark pill — see `primaryButtonSurface`).
     static let onBrand = Color(
-        light: .onBrandInk, // TODO(FAD-THEME-a)
+        light: .paletteWhite,
         dark: .onBrandInk
     )
 
-    /// Primary button surface (Review pill fill). #FFFFFF.
+    /// Primary button (Review) surface. Dark #FFFFFF (white pill pops on dark);
+    /// Light #18161F — the pill inverts to dark so it stays dominant on a light bg
+    /// (`NFR-THEME-005`). Not yet used in UI; revisit when the Review button is built.
     static let primaryButtonSurface = Color(
-        light: .paletteWhite, // TODO(FAD-THEME-a)
+        light: .ink,
         dark: .paletteWhite
     )
 }

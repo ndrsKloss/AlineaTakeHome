@@ -75,6 +75,7 @@ struct AlineaKeyboard: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: Layout.deleteWidth, height: Layout.deleteHeight)
+                .foregroundStyle(Color.textPrimary) // template asset; hue adapts, baked alpha keeps it subtle
                 .frame(maxWidth: .infinity, minHeight: 44) // fills column; ≥44pt target (NFR-A11Y-006)
                 .contentShape(Rectangle())
         }

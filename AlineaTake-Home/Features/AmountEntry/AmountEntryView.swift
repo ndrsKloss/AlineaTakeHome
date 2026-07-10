@@ -57,14 +57,14 @@ struct AmountEntryView: View {
                 VStack(spacing: 24) {
                     Text("Amount", comment: "Placeholder title for the amount entry screen")
                         .font(.largeTitle.weight(.semibold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.textPrimary)
 
                     Button {
                         viewModel.didTapReview()
                     } label: {
                         Text("Review", comment: "Review action on the amount entry screen")
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.textPrimary)
                 }
 
                 Spacer()
@@ -78,7 +78,6 @@ struct AmountEntryView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
-        .preferredColorScheme(.dark) // dark-only design; keeps the status bar legible
     }
 }
 

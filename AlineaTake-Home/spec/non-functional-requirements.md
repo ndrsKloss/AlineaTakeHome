@@ -97,7 +97,7 @@ The application MUST render correctly and legibly in both **Light Mode** and **D
 
 ### 2.3 Relationship to the design specification ⚠️ (important)
 **The Figma design provides a single, Dark appearance only** (background `#18161F`, white foreground, brand-gradient accents — see design-spec §5/§8). There is **no Light Mode design in Figma.** Therefore:
-- Dark Mode is **design-confirmed**; Light Mode is a **documented extension** whose exact palette must be **derived** and approved (`FAD-THEME-a`).
+- Dark Mode is **design-confirmed**; Light Mode is a **documented extension** whose palette has been **derived and ratified** (`FAD-THEME-a`, see §2.10).
 - Light Mode MUST preserve the *same visual hierarchy, emphasis, and semantic intent* as the Dark design — it is a re-theming, not a redesign.
 
 ### 2.4 User-visible behavior
@@ -139,11 +139,28 @@ The application MUST render correctly and legibly in both **Light Mode** and **D
 - Verify each §7 asset in both appearances.
 
 ### 2.9 Unresolved decisions / assumptions (FAD)
-- **FAD-THEME-a:** the **Light Mode palette** (there is no Figma reference — must be derived and approved). ⚠️
-- **FAD-THEME-b:** the semantic color-token catalog and theme architecture.
-- **FAD-THEME-c:** asset strategy for non-adaptive assets (rebuild live vs. per-appearance exports).
+- **FAD-THEME-a:** ✅ **RESOLVED (2026-07-10)** — the Light Mode palette has been derived and ratified; see §2.10.
+- **FAD-THEME-b:** the semantic color-token catalog and theme architecture. *(Partially realized: roles live in `DesignSystem/Tokens/SemanticColors.swift`; full catalog/architecture still open.)*
+- **FAD-THEME-c:** asset strategy for non-adaptive assets (rebuild live vs. per-appearance exports). *(Current glyphs — `ic_chevron`, `ic_delete_numpad` — use **template rendering + semantic tint**; badge/glow assets still open.)*
 - **FAD-THEME-d:** how brand gradients/glows are expressed per appearance.
 - **Assumption:** Dark Mode == the current Figma design verbatim; Light Mode is a faithful re-theme preserving hierarchy.
+
+### 2.10 Resolved: Light Mode palette (`FAD-THEME-a`) ✅
+
+Ratified **2026-07-10**. Dark values are the Figma design verbatim; Light values are **derived** (no Figma reference) as a faithful re-theme preserving hierarchy, emphasis, and semantic intent (`NFR-THEME-005`) at WCAG AA contrast (`NFR-THEME-006`). Implemented as adaptive `Color(light:dark:)` roles in `DesignSystem/Tokens/SemanticColors.swift` (Light background primitive `cloud` `#F4F3F8` in `ColorPalette.swift`).
+
+| Semantic role | Dark (Figma) | Light (derived) | Rationale / assumption |
+|---|---|---|---|
+| `background-primary` | `#18161F` | `#F4F3F8` | soft cool off-white mirroring the dark bg's purple undertone |
+| `text-primary` | `#FFFFFF` | `#18161F` | near-black on light (~15:1 contrast) |
+| `text-placeholder` | white @4% | `#18161F` @20% | faint `$0` ghost, de-emphasized; light needs >4% to read as a comparably faint ghost |
+| `surface-chip` | `#23212C` @75% | `#18161F` @8% | subtle elevated grey pill; dark label stays legible |
+| `brand-gradient-start` | `#B24DCC` | `#B24DCC` (same) | brand identity is appearance-independent; reads on both backgrounds |
+| `brand-gradient-end` | `#8955F9` | `#8955F9` (same) | same |
+| `on-brand` | `#22212D` | `#FFFFFF` | label on the primary button; white on the inverted (dark) light-mode pill |
+| `primary-button-surface` | `#FFFFFF` | `#18161F` | Review pill **inverts to dark** on a light bg to stay dominant (`NFR-THEME-005`); not yet used in UI — revisit when the Review button is built |
+
+**Assumptions carried:** brand gradients are kept identical across appearances (`NFR-THEME-009` re-tuning remains SHOULD; large glows are contrast-exempt); disabled/error roles remain undefined (design-spec §12); the `primary-button-surface` / `on-brand` Light treatment is forward-looking and to be re-validated when the Review button is implemented.
 
 ---
 

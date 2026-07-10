@@ -47,8 +47,11 @@ extension Color {
 
     /// #FFFFFF — Figma `main/white` / `dark foreground`.
     static let paletteWhite = Color(hex: "FFFFFF")
-    /// #18161F — screen background base.
+    /// #18161F — dark screen background base (and Light-mode primary text).
     static let ink = Color(hex: "18161F")
+    /// #F4F3F8 — Light-mode screen background base. Derived (no Figma reference,
+    /// `FAD-THEME-a`): a soft cool off-white mirroring `ink`'s purple undertone.
+    static let cloud = Color(hex: "F4F3F8")
     /// #23212C — suggestion-chip surface base (used at 75% opacity).
     static let chipInk = Color(hex: "23212C")
     /// #22212D — dark label on the white Review pill.
