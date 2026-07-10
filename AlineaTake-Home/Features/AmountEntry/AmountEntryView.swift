@@ -68,6 +68,13 @@ struct AmountEntryView: View {
                 }
 
                 Spacer()
+
+                AlineaKeyboard(
+                    onDigit: viewModel.didTapDigit,
+                    onDecimal: viewModel.didTapDecimal,
+                    onDelete: viewModel.didTapDelete
+                )
+                .padding(.horizontal, .keypadSideMargin)
             }
         }
         .toolbar(.hidden, for: .navigationBar)

@@ -21,6 +21,24 @@ final class AmountEntryViewModel {
         coordinator.showReview()
     }
 
+    // MARK: Keypad intents
+    //
+    // Wired to `AlineaKeyboard`; the amount value, edit rules, locale formatting
+    // (`NFR-LOC-006/011`) and haptics land in the amount-value slice. For now the
+    // screen is laid out but entry is inert.
+
+    func didTapDigit(_ digit: Int) {
+        // Append `digit` to the amount (design-spec §10).
+    }
+
+    func didTapDecimal() {
+        // Append the decimal separator when allowed (rule is open — design-spec §12 Q1).
+    }
+
+    func didTapDelete() {
+        // Remove the last entered character.
+    }
+
     #if DEBUG
     func didTapDesignSystemCatalog() {
         coordinator.showTokenCatalog()

@@ -26,6 +26,8 @@ extension CGFloat {
     /// Note: inconsistent with `screenMarginButton` (24) though both share the
     /// same band — see design-spec §12 Q6.
     static let screenMarginChips: CGFloat = 41
+    /// 41 — keypad side margin (Figma keypad frame left = 41; node 2007:141).
+    static let keypadSideMargin: CGFloat = 41
     /// 68 — vertical pitch between keypad rows.
     static let keypadRowPitch: CGFloat = 68
     /// ~130.5 — horizontal pitch between keypad columns.
