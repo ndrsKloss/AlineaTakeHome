@@ -143,6 +143,7 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
 				"pt-BR",
 			);
 			mainGroup = 7186A7BD30012E680050669E;

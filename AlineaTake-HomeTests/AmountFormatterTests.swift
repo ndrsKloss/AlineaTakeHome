@@ -13,8 +13,13 @@ import Testing
 @Suite struct AmountFormatterTests {
     private let en = Locale(identifier: "en_US")
     private let ptBR = Locale(identifier: "pt_BR")
+    /// Same language (`es`), two regions — the currency follows the *region*,
+    /// not the language: Mexico ⇒ MXN, Spain ⇒ EUR (see the Spanish suite below).
+    private let esMX = Locale(identifier: "es_MX")
+    private let esES = Locale(identifier: "es_ES")
 
-    /// The no-break space Foundation places between `R$` and the amount in pt-BR.
+    /// The no-break space Foundation places between `R$` and the amount in pt-BR
+    /// (and, for es-ES, between the amount and the trailing `€`).
     private let nbsp = "\u{00A0}"
 
     // MARK: Placeholder
@@ -75,6 +80,34 @@ import Testing
         #expect(AmountFormatter.label(wholeAmount: 500, locale: en) == "$500")
         #expect(AmountFormatter.label(wholeAmount: 2000, locale: en) == "$2,000")
         #expect(AmountFormatter.label(wholeAmount: 10000, locale: ptBR) == "R$\(nbsp)10.000")
+    }
+
+    // MARK: One language, region-derived currency (Spanish: Mexico vs Spain)
+
+    /// The headline guarantee: the *same* Spanish value renders in a *different*
+    /// currency per region — Mexican pesos (MXN) vs euros (EUR) — with no
+    /// language-specific currency logic. This is what lets a single `es`
+    /// translation serve every Spanish region.
+    @Test func sameSpanishValueUsesRegionCurrency() {
+        let twoThousand = typing([2, 0, 0, 0])
+        // es-MX ⇒ MXN: bare `$` prefix, `,` grouping — visually identical to USD
+        // in-region (Foundation only disambiguates to `MX$` for out-of-region viewers).
+        #expect(AmountFormatter.display(twoThousand, locale: esMX) == "$2,000")
+        // es-ES ⇒ EUR: symbol *after* the amount, preceded by a no-break space.
+        #expect(AmountFormatter.display(twoThousand, locale: esES) == "2000\(nbsp)€")
+    }
+
+    /// es-ES groups only from five digits (European convention), so 2.000 shows
+    /// no separator while 10.000 does — and the `€` trails with a no-break space.
+    @Test func spainEuroGroupsFromFiveDigits() {
+        #expect(AmountFormatter.display(typing([2, 0, 0, 0]), locale: esES) == "2000\(nbsp)€")
+        #expect(AmountFormatter.display(typing([1, 0, 0, 0, 0]), locale: esES) == "10.000\(nbsp)€")
+    }
+
+    /// Suggestion chips follow the same region-currency rule.
+    @Test func spanishSuggestionLabelsUseRegionCurrency() {
+        #expect(AmountFormatter.label(wholeAmount: 10000, locale: esMX) == "$10,000")
+        #expect(AmountFormatter.label(wholeAmount: 10000, locale: esES) == "10.000\(nbsp)€")
     }
 
     // MARK: Helper
