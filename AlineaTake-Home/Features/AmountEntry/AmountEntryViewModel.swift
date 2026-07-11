@@ -9,8 +9,14 @@ import SwiftUI
 final class AmountEntryViewModel {
     private let coordinator: AmountEntryCoordinating
 
-    init(coordinator: AmountEntryCoordinating) {
+    /// The locale driving all amount/currency formatting and the keypad decimal
+    /// glyph. Injected (defaults to `.current`) so behavior follows the device at
+    /// runtime while remaining testable under a fixed locale.
+    private let locale: Locale
+
+    init(coordinator: AmountEntryCoordinating, locale: Locale = .current) {
         self.coordinator = coordinator
+        self.locale = locale
     }
 
     func didTapBack() {
@@ -29,7 +35,7 @@ final class AmountEntryViewModel {
 
     /// Locale-formatted amount for `AlineaAmountDisplay` (`NFR-LOC-006`).
     var amountText: String {
-        AmountFormatter.display(entry, locale: .current)
+        AmountFormatter.display(entry, locale: locale)
     }
 
     /// Whether the amount is the faint `$0` placeholder vs an entered value.
@@ -46,7 +52,7 @@ final class AmountEntryViewModel {
     /// The keypad's decimal glyph / the separator the user types, coupled to the
     /// active locale (`.` en, `,` pt-BR — `NFR-LOC-011`).
     var decimalSeparator: String {
-        Locale.current.decimalSeparator ?? "."
+        locale.decimalSeparator ?? "."
     }
 
     // MARK: Suggestions
@@ -57,7 +63,7 @@ final class AmountEntryViewModel {
 
     /// Locale-formatted chip label (e.g. `$2,000`) for a suggestion value.
     func suggestionLabel(_ value: Int) -> String {
-        AmountFormatter.label(wholeAmount: value, locale: .current)
+        AmountFormatter.label(wholeAmount: value, locale: locale)
     }
 
     func didSelectSuggestion(_ value: Int) {
