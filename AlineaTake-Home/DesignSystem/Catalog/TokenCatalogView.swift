@@ -97,6 +97,10 @@ struct TokenCatalogView: View {
                     }
                 }
 
+                section("Badge (AutomatedBadge)") {
+                    AutomatedBadge("AUTOMATED")
+                }
+
                 section("Special button (AlineaSpecialButton)") {
                     AlineaSpecialButton("Review") {}
                         .padding(.vertical, .spacingSmall)

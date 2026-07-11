@@ -1,6 +1,18 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "AUTOMATED" : {
+      "comment" : "Badge in the top app bar indicating the amount is automated",
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AUTOMÁTICO"
+          }
+        }
+      }
+    },
     "Back" : {
       "comment" : "Back action on the amount entry screen",
       "extractionState" : "manual",

@@ -64,15 +64,7 @@ private enum Icons {
                     .frame(width: 36, height: 36)
             }
         } center: {
-            // Change to use the right component once it is created
-            Text("AUTOMATED")
-                .textStyle(.chip)
-                .foregroundStyle(Color.textPrimary)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 4)
-                .overlay(
-                    Capsule().strokeBorder(Color.brandGradientStart, lineWidth: 1)
-                )
+            AutomatedBadge("AUTOMATED")
         }
     }
     .preferredColorScheme(.dark)

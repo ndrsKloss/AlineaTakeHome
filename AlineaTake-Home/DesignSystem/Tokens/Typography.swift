@@ -62,6 +62,14 @@ extension AlineaTextStyle {
         lineSpacing: 0
     )
 
+    /// `AUTOMATED` badge label — GT Flexa Condensed Medium 12.5 / ls 5% (0.625).
+    /// (Figma `Tag` 2010:562 text child: GT Flexa Condensed 12.5, letter-spacing 5%.)
+    static let badge = AlineaTextStyle(
+        font: customFont(AlineaFonts.Name.gtFlexaCondensedMedium, size: 12.5, relativeTo: .caption),
+        tracking: 0.625,
+        lineSpacing: 0
+    )
+
     /// Suggestion chip — Instrument Sans SemiCondensed Medium 17 / −0.17.
     static let chip = AlineaTextStyle(
         font: customFont(AlineaFonts.Name.instrumentSansSemiCondensedMedium, size: 17, relativeTo: .body),

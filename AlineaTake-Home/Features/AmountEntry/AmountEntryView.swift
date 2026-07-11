@@ -42,6 +42,11 @@ struct AmountEntryView: View {
                         }
                         .accessibilityLabel(Strings.back)
                     },
+                    center: {
+                        // Present in both states (design-spec §3.0 — the two
+                        // states share the badge).
+                        AutomatedBadge(Strings.automated)
+                    },
                     trailing: {
                         #if DEBUG
                         // Developer-only shortcut to the design-system catalog,
@@ -189,6 +194,9 @@ private enum Layout {
 /// the key at render time. The accessibility label uses `String(localized:)` so
 /// the translator `comment` lives with the literal for string extraction.
 private enum Strings {
+    /// Stays a `LocalizedStringKey` for the same reason as `review` — it feeds
+    /// `AutomatedBadge(_ title: LocalizedStringKey)`.
+    static let automated: LocalizedStringKey = "AUTOMATED"
     static let review: LocalizedStringKey = "Review"
     static let back = String(
         localized: "Back",
