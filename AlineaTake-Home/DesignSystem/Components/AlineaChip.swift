@@ -9,7 +9,8 @@ import SwiftUI
 /// Presentation only — it reports taps via `action`; the domain value behind the
 /// label and its visibility (shown only when the amount is empty, design-spec §10)
 /// are owned by the caller/view model. The design draws no pressed/selected state
-/// (§12), so none is invented (non-interactive glass variant).
+/// (§12); rather than invent one, the chip uses the glass material's own
+/// `.interactive()` press response — the system-standard Liquid-Glass feedback.
 ///
 /// Rows of chips should be wrapped in a `GlassEffectContainer` by the caller so
 /// neighbouring glass shapes render/blend correctly.
@@ -29,7 +30,7 @@ struct AlineaChip: View {
                 .foregroundStyle(Color.textPrimary)
                 .padding(.horizontal, .spacingMedium)
                 .frame(height: Layout.height)
-                .glassEffect(.regular.tint(Color.surfaceChip), in: .capsule)
+                .glassEffect(.regular.tint(Color.surfaceChip).interactive(), in: .capsule)
                 .contentShape(.capsule)
         }
         .buttonStyle(.plain)
