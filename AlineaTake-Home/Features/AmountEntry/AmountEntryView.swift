@@ -88,10 +88,14 @@ struct AmountEntryView: View {
     /// The amount-empty visibility rule (design-spec §10) is wired with the amount
     /// state in a later slice.
     private var suggestionRow: some View {
-        let chips = HStack(spacing: .chipGap) {
-            ForEach(viewModel.suggestions, id: \.self) { label in
-                AlineaChip(label) {
-                    viewModel.didSelectSuggestion(label)
+        // GlassEffectContainer lets the chips' neighbouring glass shapes render
+        // and blend correctly as one glass group.
+        let chips = GlassEffectContainer {
+            HStack(spacing: .chipGap) {
+                ForEach(viewModel.suggestions, id: \.self) { label in
+                    AlineaChip(label) {
+                        viewModel.didSelectSuggestion(label)
+                    }
                 }
             }
         }

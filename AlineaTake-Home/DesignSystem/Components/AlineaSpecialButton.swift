@@ -121,7 +121,7 @@ private enum Layout {
     /// difference to make frame 0 match the static design.
     static let gradientAxis: Angle = .degrees(81.72 - 90)
     /// Hairline rim shadows above/below the pill.
-    static let rimShadowTopOffset: CGFloat = -1
+    static let rimShadowTopOffset: CGFloat = -0.2
     static let rimShadowBottomOffset: CGFloat = 1
 }
 

@@ -81,10 +81,12 @@ struct TokenCatalogView: View {
                 }
 
                 section("Suggestion chip (AlineaChip)") {
-                    HStack(spacing: .chipGap) {
-                        AlineaChip("$500") {}
-                        AlineaChip("$2,000") {}
-                        AlineaChip("$10,000") {}
+                    GlassEffectContainer {
+                        HStack(spacing: .chipGap) {
+                            AlineaChip("$500") {}
+                            AlineaChip("$2,000") {}
+                            AlineaChip("$10,000") {}
+                        }
                     }
                 }
 
