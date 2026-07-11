@@ -97,8 +97,8 @@ struct TokenCatalogView: View {
                     }
                 }
 
-                section("Badge (AutomatedBadge)") {
-                    AutomatedBadge("AUTOMATED")
+                section("Badge (AlineaAutomatedBadge)") {
+                    AlineaAutomatedBadge("AUTOMATED")
                 }
 
                 section("Special button (AlineaSpecialButton)") {

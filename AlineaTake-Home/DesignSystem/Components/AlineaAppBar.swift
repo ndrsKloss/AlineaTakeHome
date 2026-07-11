@@ -64,7 +64,7 @@ private enum Icons {
                     .frame(width: 36, height: 36)
             }
         } center: {
-            AutomatedBadge("AUTOMATED")
+            AlineaAutomatedBadge("AUTOMATED")
         }
     }
     .preferredColorScheme(.dark)

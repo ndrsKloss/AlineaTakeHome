@@ -45,7 +45,7 @@ struct AmountEntryView: View {
                     center: {
                         // Present in both states (design-spec §3.0 — the two
                         // states share the badge).
-                        AutomatedBadge(Strings.automated)
+                        AlineaAutomatedBadge(Strings.automated)
                     },
                     trailing: {
                         #if DEBUG
@@ -195,7 +195,7 @@ private enum Layout {
 /// the translator `comment` lives with the literal for string extraction.
 private enum Strings {
     /// Stays a `LocalizedStringKey` for the same reason as `review` — it feeds
-    /// `AutomatedBadge(_ title: LocalizedStringKey)`.
+    /// `AlineaAutomatedBadge(_ title: LocalizedStringKey)`.
     static let automated: LocalizedStringKey = "AUTOMATED"
     static let review: LocalizedStringKey = "Review"
     static let back = String(

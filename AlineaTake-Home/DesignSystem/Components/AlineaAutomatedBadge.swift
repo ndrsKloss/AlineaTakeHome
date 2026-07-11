@@ -1,20 +1,12 @@
 import SwiftUI
 
-/// The `AUTOMATED` pill badge centered in the top app bar in both screen states
-/// (design-spec §3.0; Figma `Tag` 2010:562, arch-spec `AutomatedBadge`).
+/// The `AUTOMATED` pill badge centered in the top app bar.
 ///
-/// In Figma the border is an **image stroke**: the node's stroke fill is a
-/// holographic-foil texture (pastel rainbow + halftone dots), not a gradient —
-/// so the design-spec prose ("magenta→blue gradient border") under-describes it.
-/// The border here uses that exact texture (`img_badge_border`, the fill asset
-/// extracted from the Figma file), scaled to cover the pill like Figma's
-/// image-fill mode and masked to the capsule's inside stroke. Per
 /// `NFR-THEME-007` the asset's Light/Dark behavior is defined explicitly: it is
 /// brand identity and appearance-independent — rendered identically in both
 /// appearances, like the brand gradient tokens. The border is static (the
-/// source asset is a static image), so there is no motion to gate on
-/// Reduce Motion.
-struct AutomatedBadge: View {
+/// source asset is a static image), so there is no motion.
+struct AlineaAutomatedBadge: View {
     private let title: LocalizedStringKey
 
     /// The Figma text box is 12pt high (line-height 11.4) — shorter than GT
@@ -55,7 +47,7 @@ struct AutomatedBadge: View {
 }
 
 private enum Layout {
-    /// 7 / 6 / 4 — the badge frame's asymmetric auto-layout padding (Figma 2010:562).
+    /// 7 / 6 / 4 — the badge frame's asymmetric auto-layout padding
     static let leadingPadding: CGFloat = 7
     static let trailingPadding: CGFloat = 6
     static let verticalPadding: CGFloat = 4
@@ -76,7 +68,7 @@ private enum Icons {
 #Preview("Dark") {
     ZStack {
         Color.backgroundPrimary.ignoresSafeArea()
-        AutomatedBadge("AUTOMATED")
+        AlineaAutomatedBadge("AUTOMATED")
     }
     .preferredColorScheme(.dark)
 }
@@ -84,7 +76,7 @@ private enum Icons {
 #Preview("Light") {
     ZStack {
         Color.backgroundPrimary.ignoresSafeArea()
-        AutomatedBadge("AUTOMATED")
+        AlineaAutomatedBadge("AUTOMATED")
     }
     .preferredColorScheme(.light)
 }
