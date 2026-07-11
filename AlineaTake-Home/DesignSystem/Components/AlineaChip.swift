@@ -29,7 +29,7 @@ struct AlineaChip: View {
                 .textStyle(.chip)
                 .foregroundStyle(Color.textPrimary)
                 .padding(.horizontal, .spacingMedium)
-                .frame(height: Layout.height)
+                .frame(minWidth: Layout.minWidth, minHeight: Layout.height, maxHeight: Layout.height)
                 .glassEffect(.regular.tint(Color.surfaceChip).interactive(), in: .capsule)
                 .contentShape(.capsule)
         }
@@ -40,6 +40,8 @@ struct AlineaChip: View {
 private enum Layout {
     /// 44 — chip height (design-spec §9 / §5).
     static let height: CGFloat = 44
+    /// 96 — minimum chip width (Figma chip `2007:99` ≈ 95.67, Fill within the 311 row).
+    static let minWidth: CGFloat = 96
 }
 
 #Preview {

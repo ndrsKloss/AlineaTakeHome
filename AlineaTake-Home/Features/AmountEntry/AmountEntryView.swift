@@ -62,7 +62,7 @@ struct AmountEntryView: View {
                 Spacer()
 
                 actionBand
-                    .padding(.bottom, .spacingLarge)
+                    .padding(.bottom, 44)
 
                 AlineaKeyboard(
                     decimalSeparator: viewModel.decimalSeparator,
@@ -107,30 +107,24 @@ struct AmountEntryView: View {
         reduceMotion ? .opacity : .scale(scale: 0.92).combined(with: .opacity)
     }
 
-    /// Row of quick-amount suggestion chips (design-spec §9). Centered when the
-    /// chips fit the width; only scrollable (with a 41pt inset) when they overflow.
-    /// The amount-empty visibility rule (design-spec §10) is wired in a later slice.
+    /// Row of quick-amount suggestion chips (design-spec §9), laid out in the same
+    /// three equal columns as the keypad (shared `.keypadSideMargin` + equal thirds)
+    /// so each chip centers under its keypad column — the middle chip aligns with
+    /// `2/5/8/0`. Each content-sized pill is centered within its column.
     private var suggestionRow: some View {
         // GlassEffectContainer lets the chips' neighbouring glass shapes render
         // and blend correctly as one glass group.
-        let chips = GlassEffectContainer {
-            HStack(spacing: .chipGap) {
+        GlassEffectContainer {
+            HStack(spacing: 0) {
                 ForEach(viewModel.suggestions, id: \.self) { value in
                     AlineaChip(viewModel.suggestionLabel(value)) {
                         viewModel.didSelectSuggestion(value)
                     }
+                    .frame(maxWidth: .infinity)
                 }
             }
         }
-
-        return ViewThatFits(in: .horizontal) {
-            chips // fits → centered, not scrollable
-            ScrollView(.horizontal) { // overflow → scrolls with side inset
-                chips.padding(.horizontal, .screenMarginChips)
-            }
-            .scrollIndicators(.hidden)
-        }
-        .frame(maxWidth: .infinity)
+        .padding(.horizontal, .keypadSideMargin)
     }
 }
 
