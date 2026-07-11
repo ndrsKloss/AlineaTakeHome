@@ -24,7 +24,7 @@ struct AmountEntryView: View {
                         Button {
                             viewModel.didTapBack()
                         } label: {
-                            Image("ic_chevron")
+                            Image(Icons.chevron)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 24, height: 24)
@@ -40,12 +40,12 @@ struct AmountEntryView: View {
                         Button {
                             viewModel.didTapDesignSystemCatalog()
                         } label: {
-                            Image(systemName: "swatchpalette")
+                            Image(systemName: Icons.catalog)
                                 .font(.system(size: 18, weight: .semibold))
                                 .foregroundStyle(Color.textPrimary)
                                 .frame(width: 36, height: 36)
                         }
-                        .accessibilityLabel(Text(verbatim: "Design System catalog"))
+                        .accessibilityLabel(Text(verbatim: Strings.designSystemCatalog))
                         #endif
                     }
                 )
@@ -148,6 +148,25 @@ private enum Strings {
         localized: "Back",
         comment: "Back action on the amount entry screen"
     )
+
+    #if DEBUG
+    /// VoiceOver label for the developer-only design-system shortcut. Dev-only,
+    /// so it is intentionally left verbatim (not a localized resource).
+    static let designSystemCatalog = "Design System catalog"
+    #endif
+}
+
+/// Asset/SF Symbol names used by this screen. Kept separate from `Layout`
+/// (geometry) and `Strings` (copy). Names are raw strings so each is used with
+/// the matching initializer — `Image(_:)` for catalog assets, `Image(systemName:)`
+/// for SF Symbols.
+private enum Icons {
+    static let chevron = "ic_chevron"
+
+    #if DEBUG
+    /// SF Symbol for the developer-only design-system shortcut.
+    static let catalog = "swatchpalette"
+    #endif
 }
 
 #if DEBUG

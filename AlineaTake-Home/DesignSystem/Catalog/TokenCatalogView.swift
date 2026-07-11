@@ -18,7 +18,7 @@ struct TokenCatalogView: View {
                     Button {
                         viewModel.didTapBack()
                     } label: {
-                        Image("ic_chevron")
+                        Image(Icons.chevron)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 24, height: 24)
@@ -142,6 +142,11 @@ struct TokenCatalogView: View {
             Text(name).font(.caption2).foregroundStyle(Color.textPrimary)
         }
     }
+}
+
+/// Asset names used by the design-system catalog (a DEBUG-only screen).
+private enum Icons {
+    static let chevron = "ic_chevron"
 }
 
 #Preview {

@@ -71,7 +71,7 @@ struct AlineaKeyboard: View {
 
     private var deleteKey: some View {
         Button(action: onDelete) {
-            Image("ic_delete_numpad")
+            Image(Icons.delete)
                 .resizable()
                 .scaledToFit()
                 .frame(width: Layout.deleteWidth, height: Layout.deleteHeight)
@@ -102,6 +102,12 @@ private enum Strings {
         localized: "Delete",
         comment: "Backspace key on the amount keypad"
     )
+}
+
+/// Asset names used by the keypad. Separate from `Layout` (geometry) and
+/// `Strings` (copy).
+private enum Icons {
+    static let delete = "ic_delete_numpad"
 }
 
 #Preview {

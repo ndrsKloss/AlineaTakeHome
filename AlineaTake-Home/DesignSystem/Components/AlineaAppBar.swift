@@ -45,18 +45,26 @@ private enum Layout {
     static let minHeight: CGFloat = 44
 }
 
+/// SF Symbol names used by this file's previews. The bar itself is a generic
+/// container that holds no icons of its own — sample glyphs live only in `#Preview`
+/// (which still compiles in Release, so this stays ungated).
+private enum Icons {
+    static let chevron = "ic_chevron"
+}
+
 #Preview {
     ZStack(alignment: .top) {
         Color.backgroundPrimary.ignoresSafeArea()
 
         AlineaAppBar {
             Button {} label: {
-                Image(systemName: "chevron.left")
+                Image(Icons.chevron)
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(Color.textPrimary)
                     .frame(width: 36, height: 36)
             }
         } center: {
+            // Change to use the right component once it is created
             Text("AUTOMATED")
                 .textStyle(.chip)
                 .foregroundStyle(Color.textPrimary)
