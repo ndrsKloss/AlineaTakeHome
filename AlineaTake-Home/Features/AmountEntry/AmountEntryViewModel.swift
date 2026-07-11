@@ -22,45 +22,63 @@ final class AmountEntryViewModel {
     }
 
     // MARK: Amount display
-    //
-    // The value `AlineaAmountDisplay` renders. Until the amount-value slice models
-    // digit entry + locale formatting (`NFR-LOC-006/011`), the field stays in its
-    // empty placeholder state (design-spec State A); the keypad intents below are
-    // still inert, so the shown value does not change yet.
 
-    /// Pre-formatted amount string for the display. Fixed empty placeholder for now.
-    var amountText: String { "$0" }
+    /// The canonical entered amount; the display string and enablement are derived
+    /// from it (arch-spec §11), so the view holds no duplicate formatted state.
+    private(set) var entry = AmountEntry()
+
+    /// Locale-formatted amount for `AlineaAmountDisplay` (`NFR-LOC-006`).
+    var amountText: String {
+        AmountFormatter.display(entry, locale: .current)
+    }
 
     /// Whether the amount is the faint `$0` placeholder vs an entered value.
-    var isAmountPlaceholder: Bool { true }
+    var isAmountPlaceholder: Bool {
+        entry.isEmpty
+    }
+
+    /// Whether the keypad's decimal key accepts taps — enabled unless a separator
+    /// is already present (resolves design-spec §12 Q1).
+    var isDecimalEnabled: Bool {
+        !entry.hasDecimalSeparator
+    }
+
+    /// The keypad's decimal glyph / the separator the user types, coupled to the
+    /// active locale (`.` en, `,` pt-BR — `NFR-LOC-011`).
+    var decimalSeparator: String {
+        Locale.current.decimalSeparator ?? "."
+    }
 
     // MARK: Suggestions
 
-    /// Quick-amount chips shown when no amount is entered (State A, design-spec §10).
-    /// Placeholder labels until locale-aware amount values are modelled (`NFR-LOC`)
-    /// with the amount-value slice; selecting one will set the entered amount then.
-    let suggestions: [String] = ["$500", "$2,000", "$10,000"]
+    /// Quick-amount whole values (design-spec §10). Labels are locale-formatted on
+    /// demand (`NFR-LOC-006`), not stored as hardcoded strings (`NFR-LOC-002`).
+    let suggestions: [Int] = [500, 2000, 10000]
 
-    func didSelectSuggestion(_ label: String) {
-        // Set the entered amount from the chosen suggestion (updates the amount display).
+    /// Locale-formatted chip label (e.g. `$2,000`) for a suggestion value.
+    func suggestionLabel(_ value: Int) -> String {
+        AmountFormatter.label(wholeAmount: value, locale: .current)
+    }
+
+    func didSelectSuggestion(_ value: Int) {
+        entry = AmountEntry(wholeAmount: value)
     }
 
     // MARK: Keypad intents
     //
-    // Wired to `AlineaKeyboard`; the amount value, edit rules, locale formatting
-    // (`NFR-LOC-006/011`) and haptics land in the amount-value slice. For now the
-    // screen is laid out but entry is inert.
+    // Wired to `AlineaKeyboard`; the entry's own rules cap fraction/integer length
+    // and coupling (design-spec §12 Q1). Haptics land in a later slice.
 
     func didTapDigit(_ digit: Int) {
-        // Append `digit` to the amount (design-spec §10).
+        entry = entry.appending(digit: digit)
     }
 
     func didTapDecimal() {
-        // Append the decimal separator when allowed (rule is open — design-spec §12 Q1).
+        entry = entry.appendingDecimalSeparator()
     }
 
     func didTapDelete() {
-        // Remove the last entered character.
+        entry = entry.deletingLast()
     }
 
     #if DEBUG
