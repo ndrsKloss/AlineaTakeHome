@@ -6,7 +6,7 @@ import Foundation
 final class MockAmountEntryCoordinator: AmountEntryCoordinating {
     private(set) var goBackCallCount = 0
     private(set) var showReviewCallCount = 0
-    private(set) var showTokenCatalogCallCount = 0
+    private(set) var showDesignSystemCatalogCallCount = 0
 
     func goBack() {
         goBackCallCount += 1
@@ -16,8 +16,8 @@ final class MockAmountEntryCoordinator: AmountEntryCoordinating {
         showReviewCallCount += 1
     }
 
-    func showTokenCatalog() {
-        showTokenCatalogCallCount += 1
+    func showDesignSystemCatalog() {
+        showDesignSystemCatalogCallCount += 1
     }
 }
 #endif

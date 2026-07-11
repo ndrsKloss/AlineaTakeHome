@@ -9,7 +9,7 @@ protocol AmountEntryCoordinating {
     func showReview()
     #if DEBUG
     /// Presents the DEBUG-only design-system catalog (dev tool).
-    func showTokenCatalog()
+    func showDesignSystemCatalog()
     #endif
 }
 
@@ -34,8 +34,8 @@ final class AmountEntryCoordinator: AmountEntryCoordinating {
     }
 
     #if DEBUG
-    func showTokenCatalog() {
-        router.push(.tokenCatalog)
+    func showDesignSystemCatalog() {
+        router.push(.designSystemCatalog)
     }
     #endif
 }

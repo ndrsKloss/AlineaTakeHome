@@ -9,7 +9,7 @@ import Foundation
 /// second implementation to invert. Keeping the intent here leaves the view
 /// free of routing details (architecture-spec §11).
 @Observable
-final class TokenCatalogViewModel {
+final class DesignSystemCatalogViewModel {
     private let router: AppRouting
 
     init(router: AppRouting) {

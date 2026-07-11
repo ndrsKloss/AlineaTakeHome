@@ -10,6 +10,6 @@ import Foundation
 enum AppRoute: Hashable {
     #if DEBUG
     /// The DEBUG-only design-system catalog (dev tool; not shipped).
-    case tokenCatalog
+    case designSystemCatalog
     #endif
 }

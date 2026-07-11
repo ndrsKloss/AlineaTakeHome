@@ -89,7 +89,7 @@ final class AmountEntryViewModel {
 
     #if DEBUG
     func didTapDesignSystemCatalog() {
-        coordinator.showTokenCatalog()
+        coordinator.showDesignSystemCatalog()
     }
     #endif
 }

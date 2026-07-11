@@ -14,8 +14,8 @@ struct RootView: View {
                 #if DEBUG
                 .navigationDestination(for: AppRoute.self) { route in
                     switch route {
-                    case .tokenCatalog:
-                        makeTokenCatalogView()
+                    case .designSystemCatalog:
+                        makeDesignSystemCatalogView()
                     }
                 }
                 #endif
@@ -29,8 +29,8 @@ struct RootView: View {
     }
 
     #if DEBUG
-    private func makeTokenCatalogView() -> some View {
-        TokenCatalogView(viewModel: TokenCatalogViewModel(router: appCoordinator))
+    private func makeDesignSystemCatalogView() -> some View {
+        DesignSystemCatalogView(viewModel: DesignSystemCatalogViewModel(router: appCoordinator))
     }
     #endif
 }

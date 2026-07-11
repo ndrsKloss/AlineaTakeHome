@@ -4,10 +4,10 @@ import SwiftUI
 /// Visual gallery of the design-system tokens (colors, type ramp, radii) and
 /// components for verification. DEBUG-only; reached via the coordinator from the
 /// Amount screen's app bar.
-struct TokenCatalogView: View {
-    @State private var viewModel: TokenCatalogViewModel
+struct DesignSystemCatalogView: View {
+    @State private var viewModel: DesignSystemCatalogViewModel
 
-    init(viewModel: TokenCatalogViewModel) {
+    init(viewModel: DesignSystemCatalogViewModel) {
         _viewModel = State(initialValue: viewModel)
     }
 
@@ -156,6 +156,6 @@ private enum Icons {
 #Preview {
     // A real `AppCoordinator` is a harmless no-op router here (pop on an empty
     // path does nothing), so no dedicated mock is needed.
-    TokenCatalogView(viewModel: TokenCatalogViewModel(router: AppCoordinator()))
+    DesignSystemCatalogView(viewModel: DesignSystemCatalogViewModel(router: AppCoordinator()))
 }
 #endif
