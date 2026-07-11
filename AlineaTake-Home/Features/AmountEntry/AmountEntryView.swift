@@ -31,7 +31,7 @@ struct AmountEntryView: View {
                                 .foregroundStyle(Color.textPrimary)
                                 .frame(width: 36, height: 36)
                         }
-                        .accessibilityLabel(Text("Back", comment: "Back action on the amount entry screen"))
+                        .accessibilityLabel(Strings.back)
                     },
                     trailing: {
                         #if DEBUG
@@ -87,7 +87,7 @@ struct AmountEntryView: View {
                 suggestionRow
                     .transition(bandTransition)
             } else {
-                AlineaSpecialButton("Review") {
+                AlineaSpecialButton(Strings.review) {
                     viewModel.didTapReview()
                 }
                 .padding(.horizontal, .defaultMargins)
@@ -132,6 +132,22 @@ private enum Layout {
     /// Reserved action-band height — the taller of the chip row (44) and the
     /// Review button (48), so the keypad doesn't shift during the swap.
     static let actionBandHeight: CGFloat = 50
+}
+
+/// User-facing copy for this screen. Kept separate from `Layout` (geometry) so
+/// copy and layout constants don't get conflated. Each entry is a localizable
+/// resource resolved at runtime (`NFR-LOC-002`) via `Localizable.xcstrings`.
+///
+/// `review` stays a `LocalizedStringKey` because it feeds
+/// `AlineaSpecialButton(_ title: LocalizedStringKey)`, whose `Text` localizes
+/// the key at render time. The accessibility label uses `String(localized:)` so
+/// the translator `comment` lives with the literal for string extraction.
+private enum Strings {
+    static let review: LocalizedStringKey = "Review"
+    static let back = String(
+        localized: "Back",
+        comment: "Back action on the amount entry screen"
+    )
 }
 
 #if DEBUG

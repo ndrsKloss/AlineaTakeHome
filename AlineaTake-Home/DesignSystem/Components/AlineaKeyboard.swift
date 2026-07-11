@@ -80,7 +80,7 @@ struct AlineaKeyboard: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(Text("Delete", comment: "Backspace key on the amount keypad"))
+        .accessibilityLabel(Strings.delete)
         .accessibilityAddTraits(.isKeyboardKey)
     }
 }
@@ -91,6 +91,17 @@ private enum Layout {
     /// Backspace glyph size (design-spec §3.4, ~51.095 × 46.593).
     static let deleteWidth: CGFloat = 51
     static let deleteHeight: CGFloat = 47
+}
+
+/// User-facing copy for the keypad. Separate from `Layout` (geometry). The
+/// backspace key's VoiceOver label is a localizable resource (`NFR-LOC-002/009`),
+/// resolved at runtime via `Localizable.xcstrings`; `String(localized:)` keeps
+/// the translator `comment` with the literal for string extraction.
+private enum Strings {
+    static let delete = String(
+        localized: "Delete",
+        comment: "Backspace key on the amount keypad"
+    )
 }
 
 #Preview {
