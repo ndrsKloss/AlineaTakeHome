@@ -14,9 +14,19 @@ final class AmountEntryViewModel {
     /// runtime while remaining testable under a fixed locale.
     private let locale: Locale
 
-    init(coordinator: AmountEntryCoordinating, locale: Locale = .current) {
+    /// Haptic feedback for keypad presses (design-spec §3 comment 4). Injected
+    /// behind a protocol (defaults to the system generator) so it is swappable
+    /// and testable (architecture-spec §3 "Services").
+    private let haptics: HapticFeedback
+
+    init(
+        coordinator: AmountEntryCoordinating,
+        locale: Locale = .current,
+        haptics: HapticFeedback = SystemHapticFeedback()
+    ) {
         self.coordinator = coordinator
         self.locale = locale
+        self.haptics = haptics
     }
 
     func didTapBack() {
@@ -73,17 +83,22 @@ final class AmountEntryViewModel {
     // MARK: Keypad intents
     //
     // Wired to `AlineaKeyboard`; the entry's own rules cap fraction/integer length
-    // and coupling (design-spec §12 Q1). Haptics land in a later slice.
+    // and coupling (design-spec §12 Q1). Every keypad key fires haptic feedback
+    // on press (design-spec §3 comment 4). A disabled decimal key can't reach
+    // here — its Button is `.disabled` — so an unpressable key gives no feedback.
 
     func didTapDigit(_ digit: Int) {
+        haptics.keyPressed()
         entry = entry.appending(digit: digit)
     }
 
     func didTapDecimal() {
+        haptics.keyPressed()
         entry = entry.appendingDecimalSeparator()
     }
 
     func didTapDelete() {
+        haptics.keyPressed()
         entry = entry.deletingLast()
     }
 
