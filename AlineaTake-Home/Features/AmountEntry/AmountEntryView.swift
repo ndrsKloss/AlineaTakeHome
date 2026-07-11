@@ -51,13 +51,15 @@ struct AmountEntryView: View {
 
                 Spacer()
 
-                // Placeholder content — the real amount display, keypad and
-                // Review button (see `design-specification.md`) arrive in later
-                // slices. Review stays reachable so its intent is exercisable.
+                // The amount display is wired; the keypad→value logic and the
+                // real Review button (see `design-specification.md`) arrive in
+                // later slices. Review stays reachable so its intent is exercisable.
                 VStack(spacing: 24) {
-                    Text("Amount", comment: "Placeholder title for the amount entry screen")
-                        .font(.largeTitle.weight(.semibold))
-                        .foregroundStyle(Color.textPrimary)
+                    AlineaAmountDisplay(
+                        viewModel.amountText,
+                        isPlaceholder: viewModel.isAmountPlaceholder,
+                        showCaret: true
+                    )
 
                     Button {
                         viewModel.didTapReview()

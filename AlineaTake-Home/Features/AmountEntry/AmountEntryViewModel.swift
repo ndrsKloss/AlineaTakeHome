@@ -21,6 +21,19 @@ final class AmountEntryViewModel {
         coordinator.showReview()
     }
 
+    // MARK: Amount display
+    //
+    // The value `AlineaAmountDisplay` renders. Until the amount-value slice models
+    // digit entry + locale formatting (`NFR-LOC-006/011`), the field stays in its
+    // empty placeholder state (design-spec State A); the keypad intents below are
+    // still inert, so the shown value does not change yet.
+
+    /// Pre-formatted amount string for the display. Fixed empty placeholder for now.
+    var amountText: String { "$0" }
+
+    /// Whether the amount is the faint `$0` placeholder vs an entered value.
+    var isAmountPlaceholder: Bool { true }
+
     // MARK: Suggestions
 
     /// Quick-amount chips shown when no amount is entered (State A, design-spec §10).
