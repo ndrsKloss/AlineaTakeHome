@@ -24,14 +24,12 @@ extension CGFloat {
     static let chipGap: CGFloat = 12
     /// 24 — side margin of the Review button ((393 − 345) / 2).
     static let screenMarginButton: CGFloat = 24
-    /// 41 — side margin of the suggestion-bubble row.
-    /// Note: inconsistent with `screenMarginButton` (24) though both share the
-    /// same band — see design-spec §12 Q6.
-    static let screenMarginChips: CGFloat = 41
-    /// 41 — keypad side margin (Figma keypad frame left = 41; node 2007:141).
-    static let keypadSideMargin: CGFloat = 41
+    /// 40 — side margin of the suggestion-bubble row.
+    static let screenMarginChips: CGFloat = 40
+    /// 40 — keypad side margin
+    static let keypadSideMargin: CGFloat = 40
     /// 68 — vertical pitch between keypad rows.
     static let keypadRowPitch: CGFloat = 68
-    /// ~130.5 — horizontal pitch between keypad columns.
-    static let keypadColumnPitch: CGFloat = 130.5
+    /// 130 — horizontal pitch between keypad columns.
+    static let keypadColumnPitch: CGFloat = 130
 }

@@ -99,7 +99,7 @@ struct TokenCatalogView: View {
 
                 section("Special button (AlineaSpecialButton)") {
                     AlineaSpecialButton("Review") {}
-                        .padding(.vertical, .spacingSmall) // room for the halo spill
+                        .padding(.vertical, .spacingSmall)
                 }
 
                 section("Keyboard (AlineaKeyboard)") {
