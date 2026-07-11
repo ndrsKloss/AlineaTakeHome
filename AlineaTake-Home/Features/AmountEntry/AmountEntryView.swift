@@ -17,6 +17,15 @@ struct AmountEntryView: View {
     var body: some View {
         ZStack {
             Color.backgroundPrimary.ignoresSafeArea()
+                .overlay(alignment: .top) {
+                    // State B only (design-spec §3.2): a faint radial glow
+                    // spilling from above the top edge, behind all content.
+                    if !viewModel.isAmountPlaceholder {
+                        topGlow
+                            .transition(.opacity)
+                    }
+                }
+                .animation(.easeInOut, value: viewModel.isAmountPlaceholder)
 
             VStack(spacing: 0) {
                 AlineaAppBar(
@@ -107,6 +116,33 @@ struct AmountEntryView: View {
         reduceMotion ? .opacity : .scale(scale: 0.92).combined(with: .opacity)
     }
 
+    /// State B's top glow (design-spec §3.2)
+    /// whose center sits just above the top screen edge, so only its lower half
+    /// shows — a subtle white light falling from the top. Geometry and gradient
+    /// shape are the Figma fill verbatim (radial white 12% → 0%).
+    /// Rendered identically in Light Mode, where it reads as (intentionally)
+    /// near-invisible against the light background.
+    private var topGlow: some View {
+        Circle()
+            .fill(
+                RadialGradient(
+                    colors: [
+                        .white.opacity(Layout.glowCoreOpacity),
+                        .white.opacity(0),
+                    ],
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: Layout.glowDiameter / 2
+                )
+            )
+            .frame(width: Layout.glowDiameter, height: Layout.glowDiameter)
+            .opacity(Layout.glowLayerOpacity)
+            .offset(y: Layout.glowTopOffset)
+            .ignoresSafeArea(edges: .top)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+    }
+
     /// Row of quick-amount suggestion chips (design-spec §9), laid out in the same
     /// three equal columns as the keypad (shared `.keypadSideMargin` + equal thirds)
     /// so each chip centers under its keypad column — the middle chip aligns with
@@ -132,6 +168,16 @@ private enum Layout {
     /// Reserved action-band height — the taller of the chip row (44) and the
     /// Review button (48), so the keypad doesn't shift during the swap.
     static let actionBandHeight: CGFloat = 50
+
+    // Top glow (radial #FFFFFF → 0%).
+    /// Diameter of the glow circle.
+    static let glowDiameter: CGFloat = 519
+    /// Vertical offset of the circle's top edge from the screen top.
+    static let glowTopOffset: CGFloat = -272.8
+    /// Gradient's center-stop white opacity (the 12% stop).
+    static let glowCoreOpacity: CGFloat = 0.12
+    /// Whole-layer opacity applied on top of the gradient.
+    static let glowLayerOpacity: CGFloat = 0.8
 }
 
 /// User-facing copy for this screen. Kept separate from `Layout` (geometry) so
