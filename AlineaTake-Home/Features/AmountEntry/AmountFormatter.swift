@@ -30,11 +30,19 @@ enum AmountFormatter {
     /// round-tripped through a number.
     static func display(_ entry: AmountEntry, locale: Locale) -> String {
         let integerValue = Int(entry.integerDigits) ?? 0
-        var result = currency(integerValue, locale: locale)
-        if entry.hasDecimalSeparator {
-            result += (locale.decimalSeparator ?? ".") + entry.fractionDigits
-        }
-        return result
+        let base = currency(integerValue, locale: locale)
+        guard entry.hasDecimalSeparator else { return base }
+
+        let fraction = (locale.decimalSeparator ?? ".") + entry.fractionDigits
+        // Splice the in-progress fraction in right after the integer's last digit
+        // rather than at the string's end, so it precedes a *trailing* currency
+        // symbol (es-ES `888 €` → `888,88 €`) instead of following it. Prefix
+        // currencies are unaffected — their last digit is already the last char
+        // (`$888` → `$888.88`). `currency(_:)` always renders at least a `0`, so a
+        // digit is always present; the fallback is purely defensive.
+        guard let lastDigit = base.lastIndex(where: \.isNumber) else { return base + fraction }
+        let insertionPoint = base.index(after: lastDigit)
+        return String(base[..<insertionPoint]) + fraction + String(base[insertionPoint...])
     }
 
     /// Suggestion-chip label for a whole amount (e.g. `$2,000` / `R$ 2.000`).

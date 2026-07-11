@@ -104,6 +104,23 @@ import Testing
         #expect(AmountFormatter.display(typing([1, 0, 0, 0, 0]), locale: esES) == "10.000\(nbsp)€")
     }
 
+    /// A fraction on a **suffix-symbol** currency must land before the trailing
+    /// symbol (`888,88 €`), not after it (`888 €,88`). Regression for the
+    /// append-at-end bug that only surfaced once a symbol-after currency existed.
+    @Test func spainEuroFractionPrecedesTrailingSymbol() {
+        let entry = typing([8, 8, 8]).appendingDecimalSeparator().appending(digit: 8).appending(digit: 8)
+        #expect(AmountFormatter.display(entry, locale: esES) == "888,88\(nbsp)€")
+    }
+
+    /// In-progress euro fraction states also keep the `€` last: a bare separator
+    /// and a trailing zero sit before the symbol.
+    @Test func spainEuroInProgressFractionKeepsSymbolLast() {
+        let bareSeparator = typing([8, 8, 8]).appendingDecimalSeparator()
+        #expect(AmountFormatter.display(bareSeparator, locale: esES) == "888,\(nbsp)€")
+        let trailingZero = bareSeparator.appending(digit: 8).appending(digit: 0)
+        #expect(AmountFormatter.display(trailingZero, locale: esES) == "888,80\(nbsp)€")
+    }
+
     /// Suggestion chips follow the same region-currency rule.
     @Test func spanishSuggestionLabelsUseRegionCurrency() {
         #expect(AmountFormatter.label(wholeAmount: 10000, locale: esMX) == "$10,000")
