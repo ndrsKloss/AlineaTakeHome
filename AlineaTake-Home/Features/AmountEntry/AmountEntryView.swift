@@ -8,6 +8,7 @@ import SwiftUI
 /// (see `design-specification.md`) are implemented in a later task.
 struct AmountEntryView: View {
     @State private var viewModel: AmountEntryViewModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     init(viewModel: AmountEntryViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -51,27 +52,15 @@ struct AmountEntryView: View {
 
                 Spacer()
 
-                // The amount display is wired; the keypad→value logic and the
-                // real Review button (see `design-specification.md`) arrive in
-                // later slices. Review stays reachable so its intent is exercisable.
-                VStack(spacing: 24) {
-                    AlineaAmountDisplay(
-                        viewModel.amountText,
-                        isPlaceholder: viewModel.isAmountPlaceholder,
-                        showCaret: true
-                    )
-
-                    Button {
-                        viewModel.didTapReview()
-                    } label: {
-                        Text("Review", comment: "Review action on the amount entry screen")
-                    }
-                    .foregroundStyle(Color.textPrimary)
-                }
+                AlineaAmountDisplay(
+                    viewModel.amountText,
+                    isPlaceholder: viewModel.isAmountPlaceholder,
+                    showCaret: true
+                )
 
                 Spacer()
 
-                suggestionRow
+                actionBand
                     .padding(.bottom, .spacingLarge)
 
                 AlineaKeyboard(
@@ -85,6 +74,36 @@ struct AmountEntryView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
+    }
+
+    /// The action band (design-spec §6/§8): holds the suggestion chips while the
+    /// amount is empty (State A) and swaps to the Review button once a value is
+    /// entered (State B). The swap is animated (design-spec §10 #1/§10.2 #3);
+    /// under Reduce Motion it degrades to a plain opacity crossfade (`NFR-A11Y`).
+    private var actionBand: some View {
+        ZStack {
+            if viewModel.isAmountPlaceholder {
+                suggestionRow
+                    .transition(bandTransition)
+            } else {
+                AlineaSpecialButton("Review") {
+                    viewModel.didTapReview()
+                }
+                .padding(.horizontal, .screenMarginButton)
+                .transition(bandTransition)
+            }
+        }
+        // Reserve the taller of the two states so the keypad never shifts.
+        .frame(minHeight: Layout.actionBandHeight)
+        .animation(
+            reduceMotion ? .easeInOut : .snappy,
+            value: viewModel.isAmountPlaceholder
+        )
+    }
+
+    /// Scale + fade normally; plain fade under Reduce Motion.
+    private var bandTransition: AnyTransition {
+        reduceMotion ? .opacity : .scale(scale: 0.92).combined(with: .opacity)
     }
 
     /// Row of quick-amount suggestion chips (design-spec §9). Centered when the
@@ -112,6 +131,12 @@ struct AmountEntryView: View {
         }
         .frame(maxWidth: .infinity)
     }
+}
+
+private enum Layout {
+    /// Reserved action-band height — the taller of the chip row (44) and the
+    /// Review button (48), so the keypad doesn't shift during the swap.
+    static let actionBandHeight: CGFloat = 50
 }
 
 #if DEBUG
