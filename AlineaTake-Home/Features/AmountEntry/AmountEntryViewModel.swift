@@ -21,6 +21,17 @@ final class AmountEntryViewModel {
         coordinator.showReview()
     }
 
+    // MARK: Suggestions
+
+    /// Quick-amount chips shown when no amount is entered (State A, design-spec §10).
+    /// Placeholder labels until locale-aware amount values are modelled (`NFR-LOC`)
+    /// with the amount-value slice; selecting one will set the entered amount then.
+    let suggestions: [String] = ["$500", "$2,000", "$10,000"]
+
+    func didSelectSuggestion(_ label: String) {
+        // Set the entered amount from the chosen suggestion (updates the amount display).
+    }
+
     // MARK: Keypad intents
     //
     // Wired to `AlineaKeyboard`; the amount value, edit rules, locale formatting

@@ -69,6 +69,9 @@ struct AmountEntryView: View {
 
                 Spacer()
 
+                suggestionRow
+                    .padding(.bottom, .spacingLarge)
+
                 AlineaKeyboard(
                     onDigit: viewModel.didTapDigit,
                     onDecimal: viewModel.didTapDecimal,
@@ -78,6 +81,29 @@ struct AmountEntryView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
+    }
+
+    /// Row of quick-amount suggestion chips (design-spec §9). Centered when the
+    /// chips fit the width; only scrollable (with a 41pt inset) when they overflow.
+    /// The amount-empty visibility rule (design-spec §10) is wired with the amount
+    /// state in a later slice.
+    private var suggestionRow: some View {
+        let chips = HStack(spacing: .chipGap) {
+            ForEach(viewModel.suggestions, id: \.self) { label in
+                AlineaChip(label) {
+                    viewModel.didSelectSuggestion(label)
+                }
+            }
+        }
+
+        return ViewThatFits(in: .horizontal) {
+            chips // fits → centered, not scrollable
+            ScrollView(.horizontal) { // overflow → scrolls with side inset
+                chips.padding(.horizontal, .screenMarginChips)
+            }
+            .scrollIndicators(.hidden)
+        }
+        .frame(maxWidth: .infinity)
     }
 }
 
