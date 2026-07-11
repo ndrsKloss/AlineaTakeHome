@@ -9,6 +9,20 @@ import Foundation
 /// `$1,234.56` (USD), pt-BR `R$ 1.234,56` (BRL). Grouping and the decimal separator
 /// likewise follow the locale (`NFR-LOC-006`); the symbol is never hand-assembled
 /// (`NFR-LOC-007`). Fallback currency is USD, matching the en fallback (`NFR-LOC-004`).
+///
+/// **Extensibility & known limitations** (currency is intentionally *tied to the
+/// locale* — accepted design decision):
+///   - *New locale, standard 2-decimal currency* (€, £, most currencies): trivial —
+///     add the region to `knownRegions` + expected-output tests; **no change here**.
+///     Foundation supplies the symbol, placement, spacing, grouping and separators.
+///   - *Currency independent of the locale* (e.g. an en-US user viewing EUR): **not
+///     supported.** The single seam is `currencyCode(for:)`; widening it means passing
+///     an explicit currency code through here and `AmountEntryViewModel`.
+///   - *0- or 3-decimal currencies* (JPY `¥` = 0, KWD/BHD = 3): symbol/separators
+///     format correctly, but the entered **fraction precision is fixed at 2 digits**
+///     in `AmountEntry` (`Limits.maxFractionDigits`), *not* currency-derived. Correct
+///     support requires making that precision currency-driven in the entry model —
+///     a model change, not a formatter change.
 enum AmountFormatter {
     /// The amount shown by `AlineaAmountDisplay`. Empty ⇒ the localized zero
     /// placeholder (`$0` / `R$ 0`). The in-progress fraction (incl. a bare
