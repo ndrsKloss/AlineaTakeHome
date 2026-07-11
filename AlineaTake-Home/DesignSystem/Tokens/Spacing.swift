@@ -18,6 +18,8 @@ extension CGFloat {
 
     // MARK: Screen-specific (Figma-confirmed)
 
+    /// 20 — default horizontal screen margin for centre-column content.
+    static let defaultMargins: CGFloat = 20
     /// 12 — horizontal gap between suggestion chips.
     static let chipGap: CGFloat = 12
     /// 24 — side margin of the Review button ((393 − 345) / 2).

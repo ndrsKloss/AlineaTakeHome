@@ -57,6 +57,7 @@ struct AmountEntryView: View {
                     isPlaceholder: viewModel.isAmountPlaceholder,
                     showCaret: true
                 )
+                .padding(.horizontal, .defaultMargins)
 
                 Spacer()
 
@@ -89,7 +90,7 @@ struct AmountEntryView: View {
                 AlineaSpecialButton("Review") {
                     viewModel.didTapReview()
                 }
-                .padding(.horizontal, .screenMarginButton)
+                .padding(.horizontal, .defaultMargins)
                 .transition(bandTransition)
             }
         }
