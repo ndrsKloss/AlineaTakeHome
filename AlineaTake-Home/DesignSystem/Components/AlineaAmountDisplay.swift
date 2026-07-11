@@ -39,12 +39,29 @@ struct AlineaAmountDisplay: View {
     @ViewBuilder
     private var content: some View {
         if showCaret, isPlaceholder, let split = text.firstIndex(where: \.isNumber) {
-            // Empty state renders "$|0": the caret sits at the insertion point,
-            // between the currency symbol and the placeholder zero (design-spec §3.1).
+            // Empty state renders "$|0": the caret marks the insertion point,
+            // between the currency symbol and the placeholder zero. The design
+            // pins the caret at the frame's horizontal centre (design-spec §3.1:
+            // caret at x≈197 ≈ 393/2), *not* the amount block — for a wide symbol
+            // like BRL's "R$" a centred block would still push the caret off to
+            // the right. Two equal `maxWidth: .infinity` halves share the space
+            // around the fixed-width caret, so the caret stays dead-centre for
+            // any symbol width: `lead` (symbol) hugs it from the left, `value`
+            // (digit + any trailing symbol) from the right.
+            //
+            // Whitespace is trimmed at the split so the caret gets a symmetric
+            // `midCaretGap` on both sides regardless of the currency's own
+            // symbol↔number separator (`.whitespaces` includes the no-break
+            // space). Interior separators — e.g. the `\u{00A0}` between `0` and
+            // `€` in es-ES `0\u{00A0}€` — are preserved as they are not
+            // surrounding whitespace; a suffix currency leaves `lead` empty,
+            // whose flexible half still keeps the caret centred.
+            let lead = String(text[..<split]).trimmingCharacters(in: .whitespaces)
+            let value = String(text[split...]).trimmingCharacters(in: .whitespaces)
             HStack(spacing: Layout.midCaretGap) {
-                glyphs(String(text[..<split]))
+                glyphs(lead).frame(maxWidth: .infinity, alignment: .trailing)
                 AmountCaret()
-                glyphs(String(text[split...]))
+                glyphs(value).frame(maxWidth: .infinity, alignment: .leading)
             }
         } else {
             // Filled (or no caret): the caret trails the value.
