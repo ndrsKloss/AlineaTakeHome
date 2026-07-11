@@ -47,6 +47,15 @@ extension Color {
         dark: Color.paletteWhite.opacity(0.04)
     )
 
+    /// Bright amount value fill (filled `$2,000`). Dark #FFFFFF; Light inverts to
+    /// #18161F so the amount stays legible on the light bg (`NFR-THEME-005`). The
+    /// design's subtle near-white radial sheen (`#FFF`→`#FFF@80%`) is composed from
+    /// this base in `AlineaAmountDisplay`.
+    static let amountValue = Color(
+        light: .ink,
+        dark: .paletteWhite
+    )
+
     /// Suggestion-chip surface. Dark #23212C @75%; Light: ink @8% (subtle elevated
     /// grey pill; keeps the dark label legible).
     static let surfaceChip = Color(

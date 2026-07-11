@@ -90,6 +90,13 @@ struct TokenCatalogView: View {
                     }
                 }
 
+                section("Amount display (AlineaAmountDisplay)") {
+                    VStack(alignment: .leading, spacing: .spacingMedium) {
+                        AlineaAmountDisplay("$0", isPlaceholder: true, showCaret: true)
+                        AlineaAmountDisplay("$2,000", isPlaceholder: false)
+                    }
+                }
+
                 section("Special button (AlineaSpecialButton)") {
                     AlineaSpecialButton("Review") {}
                         .padding(.vertical, .spacingSmall) // room for the halo spill
