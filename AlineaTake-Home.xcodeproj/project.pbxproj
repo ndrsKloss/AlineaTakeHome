@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		AAAA000000000000000000A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7186A7BE30012E680050669E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7186A7C530012E680050669E;
+			remoteInfo = "AlineaTake-Home";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		7186A7C630012E680050669E /* AlineaTake-Home.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AlineaTake-Home.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAAA000000000000000000A2 /* AlineaTake-HomeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AlineaTake-HomeTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +27,22 @@
 			path = "AlineaTake-Home";
 			sourceTree = "<group>";
 		};
+		AAAA000000000000000000A3 /* AlineaTake-HomeTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "AlineaTake-HomeTests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		7186A7C330012E680050669E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AAAA000000000000000000A5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				7186A7C830012E680050669E /* AlineaTake-Home */,
+				AAAA000000000000000000A3 /* AlineaTake-HomeTests */,
 				7186A7C730012E680050669E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				7186A7C630012E680050669E /* AlineaTake-Home.app */,
+				AAAA000000000000000000A2 /* AlineaTake-HomeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +95,29 @@
 			productReference = 7186A7C630012E680050669E /* AlineaTake-Home.app */;
 			productType = "com.apple.product-type.application";
 		};
+		AAAA000000000000000000A1 /* AlineaTake-HomeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AAAA000000000000000000A9 /* Build configuration list for PBXNativeTarget "AlineaTake-HomeTests" */;
+			buildPhases = (
+				AAAA000000000000000000A4 /* Sources */,
+				AAAA000000000000000000A5 /* Frameworks */,
+				AAAA000000000000000000A6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AAAA000000000000000000A8 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AAAA000000000000000000A3 /* AlineaTake-HomeTests */,
+			);
+			name = "AlineaTake-HomeTests";
+			packageProductDependencies = (
+			);
+			productName = "AlineaTake-HomeTests";
+			productReference = AAAA000000000000000000A2 /* AlineaTake-HomeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -82,6 +130,10 @@
 				TargetAttributes = {
 					7186A7C530012E680050669E = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					AAAA000000000000000000A1 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 7186A7C530012E680050669E;
 					};
 				};
 			};
@@ -100,12 +152,20 @@
 			projectRoot = "";
 			targets = (
 				7186A7C530012E680050669E /* AlineaTake-Home */,
+				AAAA000000000000000000A1 /* AlineaTake-HomeTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7186A7C430012E680050669E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AAAA000000000000000000A6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +182,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AAAA000000000000000000A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AAAA000000000000000000A8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7186A7C530012E680050669E /* AlineaTake-Home */;
+			targetProxy = AAAA000000000000000000A7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		7186A7CF30012E690050669E /* Debug */ = {
@@ -306,6 +381,48 @@
 			};
 			name = Release;
 		};
+		AAAA000000000000000000AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "shadow.inc.AlineaTake-HomeTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AlineaTake-Home.app/AlineaTake-Home";
+			};
+			name = Debug;
+		};
+		AAAA000000000000000000AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "shadow.inc.AlineaTake-HomeTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AlineaTake-Home.app/AlineaTake-Home";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -323,6 +440,15 @@
 			buildConfigurations = (
 				7186A7D230012E690050669E /* Debug */,
 				7186A7D330012E690050669E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AAAA000000000000000000A9 /* Build configuration list for PBXNativeTarget "AlineaTake-HomeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AAAA000000000000000000AA /* Debug */,
+				AAAA000000000000000000AB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
