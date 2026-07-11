@@ -104,7 +104,7 @@ struct AmountEntryView: View {
                 AlineaSpecialButton(Strings.review) {
                     viewModel.didTapReview()
                 }
-                .padding(.horizontal, .defaultMargins)
+                .padding(.horizontal, .screenMarginButton)
                 .transition(bandTransition)
             }
         }
@@ -148,10 +148,10 @@ struct AmountEntryView: View {
             .accessibilityHidden(true)
     }
 
-    /// Row of quick-amount suggestion chips (design-spec §9), laid out in the same
-    /// three equal columns as the keypad (shared `.keypadSideMargin` + equal thirds)
-    /// so each chip centers under its keypad column — the middle chip aligns with
-    /// `2/5/8/0`. Each content-sized pill is centered within its column.
+    /// Row of quick-amount suggestion chips (design-spec §9): three equal columns
+    /// inset by the chips' own `.screenMarginChips` (design-spec §5 gives the chips
+    /// row a wider inset than the keypad). Each content-sized pill is centered
+    /// within its column.
     private var suggestionRow: some View {
         // GlassEffectContainer lets the chips' neighbouring glass shapes render
         // and blend correctly as one glass group.
@@ -165,7 +165,7 @@ struct AmountEntryView: View {
                 }
             }
         }
-        .padding(.horizontal, .keypadSideMargin)
+        .padding(.horizontal, .screenMarginChips)
     }
 }
 

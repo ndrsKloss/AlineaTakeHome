@@ -26,8 +26,8 @@ extension CGFloat {
     static let screenMarginButton: CGFloat = 24
     /// 40 — side margin of the suggestion-bubble row.
     static let screenMarginChips: CGFloat = 40
-    /// 40 — keypad side margin
-    static let keypadSideMargin: CGFloat = 40
+    /// 46 — keypad side margin.
+    static let keypadSideMargin: CGFloat = 46
     /// 68 — vertical pitch between keypad rows.
     static let keypadRowPitch: CGFloat = 68
     /// 130 — horizontal pitch between keypad columns.
