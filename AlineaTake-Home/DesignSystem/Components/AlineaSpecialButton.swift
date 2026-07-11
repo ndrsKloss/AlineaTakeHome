@@ -65,22 +65,35 @@ private struct HaloBackground: View {
 
     var body: some View {
         GeometryReader { proxy in
-            let diagonal = hypot(proxy.size.width, proxy.size.height)
-            LinearGradient(
-                gradient: .halo,
-                startPoint: .leading,
-                endPoint: .trailing
-            )
-            .frame(width: diagonal, height: diagonal)
-            .rotationEffect(Layout.gradientAxis + spin)
-            .position(
-                x: proxy.size.width / 2,
-                y: proxy.size.height / 2
-            )
-            .clipShape(.capsule)
-            .blur(radius: Layout.haloBlur)
+            // Two copies of the same rotated gradient: the wide-blur layer
+            // pushes the glow farther out (prominence boost beyond Figma's
+            // single blur-10 layer — user-requested); the blur-10 layer on top
+            // keeps the crisp edge ring from the design.
+            ZStack {
+                haloLayer(in: proxy.size)
+                    .blur(radius: Layout.haloOuterBlur)
+                haloLayer(in: proxy.size)
+                    .blur(radius: Layout.haloBlur)
+            }
         }
         .onAppear(perform: startOrbit)
+    }
+
+    /// The brand gradient drawn on a square covering the capsule's diagonal,
+    /// rotated by the current orbit angle and clipped to the capsule.
+    private func haloLayer(in size: CGSize) -> some View {
+        LinearGradient(
+            gradient: .halo,
+            startPoint: .leading,
+            endPoint: .trailing
+        )
+        .frame(width: hypot(size.width, size.height), height: hypot(size.width, size.height))
+        .rotationEffect(Layout.gradientAxis + spin)
+        .position(
+            x: size.width / 2,
+            y: size.height / 2
+        )
+        .clipShape(.capsule)
     }
 
     /// Starts the continuous orbit unless the user prefers reduced motion, in
@@ -94,20 +107,21 @@ private struct HaloBackground: View {
 }
 
 private enum Layout {
-    /// 48 — pill height (Figma 2010:497; ≥44pt target, NFR-A11Y-006).
+    /// 48 — pill height
     static let height: CGFloat = 48
     /// 10 — halo layer blur (Figma 2010:587).
     static let haloBlur: CGFloat = 10
+    /// Wide blur for the prominence-boost glow layer.
+    static let haloOuterBlur: CGFloat = 16
     /// Full-orbit duration. The design leaves the motion open-ended
-    /// (design-spec §10.2); 4s is an assumption — slow enough to read as ambient.
+    /// 4s is an assumption — slow enough to read as ambient.
     static let orbitPeriod: TimeInterval = 4
     /// Figma draws the gradient at ~81.72° (CSS convention: 0° = up, clockwise).
     /// The gradient here runs leading→trailing (= 90°), so offset by the
     /// difference to make frame 0 match the static design.
     static let gradientAxis: Angle = .degrees(81.72 - 90)
-    /// Hairline rim shadows above/below the pill (Figma 2010:497:
-    /// `0 −0.6 #A467E1` / `0 +1 #A467E1`).
-    static let rimShadowTopOffset: CGFloat = -0.6
+    /// Hairline rim shadows above/below the pill.
+    static let rimShadowTopOffset: CGFloat = -1
     static let rimShadowBottomOffset: CGFloat = 1
 }
 
