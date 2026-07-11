@@ -31,18 +31,34 @@ struct AlineaAmountDisplay: View {
     }
 
     var body: some View {
-        HStack(spacing: Layout.caretGap) {
-            value
-            if showCaret {
-                AmountCaret()
-            }
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(verbatim: text))
+        content
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(verbatim: text))
     }
 
-    private var value: some View {
-        Text(verbatim: text)
+    @ViewBuilder
+    private var content: some View {
+        if showCaret, isPlaceholder, let split = text.firstIndex(where: \.isNumber) {
+            // Empty state renders "$|0": the caret sits at the insertion point,
+            // between the currency symbol and the placeholder zero (design-spec §3.1).
+            HStack(spacing: Layout.midCaretGap) {
+                glyphs(String(text[..<split]))
+                AmountCaret()
+                glyphs(String(text[split...]))
+            }
+        } else {
+            // Filled (or no caret): the caret trails the value.
+            HStack(spacing: Layout.caretGap) {
+                glyphs(text)
+                if showCaret {
+                    AmountCaret()
+                }
+            }
+        }
+    }
+
+    private func glyphs(_ string: String) -> some View {
+        Text(verbatim: string)
             .textStyle(.display)
             .lineLimit(1)
             .minimumScaleFactor(Layout.minScale) // shrink long amounts (design-spec §10.7)
@@ -67,10 +83,11 @@ struct AlineaAmountDisplay: View {
     }
 }
 
-/// The blinking end-caret: a solid rounded bar trailing the amount (design-spec
-/// §3.1 / §10.5, ~3 × ~100, radius 100). Owns its blink; steady under Reduce
-/// Motion (`NFR-A11Y`). Decorative — hidden from VoiceOver (the parent reads the
-/// value).
+/// The blinking caret: a solid rounded bar at the insertion point (design-spec
+/// §3.1 / §10.5, ~3 × ~100, radius 100) — between the symbol and the placeholder
+/// zero when empty (`$|0`), trailing once a value is entered. Owns its blink;
+/// steady under Reduce Motion (`NFR-A11Y`). Decorative — hidden from VoiceOver
+/// (the parent reads the value).
 private struct AmountCaret: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isVisible = true
@@ -95,6 +112,8 @@ private struct AmountCaret: View {
 private enum Layout {
     /// Gap between the value and the trailing caret.
     static let caretGap: CGFloat = 4
+    /// Tight gap around the placeholder's mid-caret ("$|0").
+    static let midCaretGap: CGFloat = 2
     /// Caret bar width (design-spec §3.1, ~3.033).
     static let caretWidth: CGFloat = 3
     /// Caret bar height (design-spec §3.1, ~106.486 ≈ the 100pt display line).
