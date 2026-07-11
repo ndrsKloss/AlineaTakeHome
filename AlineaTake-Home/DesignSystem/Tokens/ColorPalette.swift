@@ -40,8 +40,10 @@ extension Color {
     static let brandPurple = Color(hex: "8955F9")
     /// #2073DF — Figma `strategies/st03`. Part of the brand gradient palette.
     static let brandBlue = Color(hex: "2073DF")
-    /// #FFEE59 — Figma `main/accent`. Defined in the system; unused on the amount screen.
+    /// #FFEE59 — Figma `main/accent`. Halo gradient stop on the special button.
     static let accentYellow = Color(hex: "FFEE59")
+    /// #A467E1 — hairline rim shadow on the special-button pill (Figma 2010:497).
+    static let rimLilac = Color(hex: "A467E1")
 
     // MARK: Neutrals
 

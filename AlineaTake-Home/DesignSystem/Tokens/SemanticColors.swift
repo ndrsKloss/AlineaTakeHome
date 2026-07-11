@@ -76,9 +76,31 @@ extension Color {
 
     /// Primary button (Review) surface. Dark #FFFFFF (white pill pops on dark);
     /// Light #18161F — the pill inverts to dark so it stays dominant on a light bg
-    /// (`NFR-THEME-005`). Not yet used in UI; revisit when the Review button is built.
+    /// (`NFR-THEME-005`). Consumed by `AlineaSpecialButton`.
     static let primaryButtonSurface = Color(
         light: .ink,
         dark: .paletteWhite
     )
+
+    /// Hairline rim shadow on the special-button pill. #A467E1 in both — assumed
+    /// appearance-independent like the rest of the brand halo (Figma 2010:497 is
+    /// Dark-only reference; no Light value is drawn).
+    static let primaryButtonRim = Color(
+        light: .rimLilac,
+        dark: .rimLilac
+    )
+}
+
+extension Gradient {
+    /// The special-button halo gradient (Figma `ButtonBg` 2010:587): a brand
+    /// sweep white → accent yellow → magenta → purple → blue → white. Brand
+    /// identity, so identical in both appearances.
+    static let halo = Gradient(stops: [
+        .init(color: .paletteWhite, location: 0.0099),
+        .init(color: .accentYellow, location: 0.2820),
+        .init(color: .brandMagenta, location: 0.3656),
+        .init(color: .brandPurple, location: 0.4492),
+        .init(color: .brandBlue, location: 0.5285),
+        .init(color: .paletteWhite, location: 0.9223),
+    ])
 }

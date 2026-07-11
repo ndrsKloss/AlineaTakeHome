@@ -88,6 +88,11 @@ struct TokenCatalogView: View {
                     }
                 }
 
+                section("Special button (AlineaSpecialButton)") {
+                    AlineaSpecialButton("Review") {}
+                        .padding(.vertical, .spacingSmall) // room for the halo spill
+                }
+
                 section("Keyboard (AlineaKeyboard)") {
                     AlineaKeyboard(
                         onDigit: { _ in },
