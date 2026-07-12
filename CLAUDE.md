@@ -6,7 +6,7 @@ Persistent instructions for every Claude Code session working on this project. R
 
 **AlineaTake-Home** is a SwiftUI iOS app implementing an **amount-entry screen** (numeric keypad + live amount display) from a Figma take-home design. The screen is **implemented** — keypad, live locale-formatted amount, quick-amount suggestion bubbles, an animated gradient Review button, haptics, a blinking caret, and the localization/theming/Dynamic Type NFRs. The design and requirements are captured in `spec/` and remain the source of truth (see the Specification-First Workflow below). See [`README.md`](README.md) for a feature/architecture overview.
 
-- **Platform:** iOS (universal, `TARGETED_DEVICE_FAMILY = 1,2` — iPhone + iPad), SwiftUI, Swift 5.0.
+- **Platform:** iOS (iPhone only, `TARGETED_DEVICE_FAMILY = 1`), portrait-only, SwiftUI, Swift 5.0.
 - **Deployment target:** iOS 26.2. Bundle id: `shadow.inc.AlineaTake-Home`.
 - **Entry point:** `AlineaTake-Home/AlineaTake_HomeApp.swift` → `RootView` (`App/RootView.swift`, the composition root hosting the `NavigationStack` and building the amount-entry feature). There is no `ContentView` placeholder.
 - **Architecture:** MVVM + coordinator navigation, constructor injection, a two-tier design system (semantic tokens → components). Full detail in `spec/architecture-specification.md`.

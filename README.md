@@ -15,7 +15,7 @@ source of truth (see [`CLAUDE.md`](CLAUDE.md)).
 
 | Platform | Min iOS | Language | UI | Dependencies |
 |----------|---------|----------|----|--------------|
-| iPhone + iPad (universal) | 26.2 | Swift 5 | SwiftUI | None |
+| iPhone (portrait) | 26.2 | Swift 5 | SwiftUI | None |
 
 ---
 
