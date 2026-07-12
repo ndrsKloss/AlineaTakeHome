@@ -113,15 +113,26 @@ struct AmountEntryView: View {
         }
         // Reserve the taller of the two states so the keypad never shifts.
         .frame(minHeight: Layout.actionBandHeight)
+        // Triggers the swap; the per-transition animations in `bandTransition`
+        // own the chained timing, so this just enables the transition (and, under
+        // Reduce Motion, drives the plain simultaneous crossfade).
         .animation(
-            reduceMotion ? .easeInOut : .snappy,
+            .easeInOut(duration: reduceMotion ? Layout.bandFade : Layout.bandFade * 2),
             value: viewModel.isAmountPlaceholder
         )
     }
 
-    /// Scale + fade normally; plain fade under Reduce Motion.
+    /// Chained fade for the chips↔Review swap: the outgoing control fades out,
+    /// then the incoming one fades in (its insertion is delayed by the fade-out).
+    /// One asymmetric transition shared by both branches keeps the sequence
+    /// correct in both directions. Reduce Motion → a plain simultaneous crossfade
+    /// (`NFR-A11Y`).
     private var bandTransition: AnyTransition {
-        reduceMotion ? .opacity : .scale(scale: 0.92).combined(with: .opacity)
+        guard !reduceMotion else { return .opacity }
+        return .asymmetric(
+            insertion: .opacity.animation(.easeOut(duration: Layout.bandFade).delay(Layout.bandFade)),
+            removal: .opacity.animation(.easeIn(duration: Layout.bandFade))
+        )
     }
 
     // MARK: Amount-edit intents
@@ -213,6 +224,10 @@ private enum Layout {
     /// `.smooth` (zero-bounce spring) — `.snappy`'s overshoot read as a
     /// vertical lurch at the 100pt display size.
     static let amountEdit: Animation = .smooth
+
+    /// Each half of the chained action-band swap (fade out, then fade in); the
+    /// full chips↔Review swap takes 2×.
+    static let bandFade: TimeInterval = 0.15
 
     // Top glow (radial #FFFFFF → 0%).
     /// Diameter of the glow circle.
