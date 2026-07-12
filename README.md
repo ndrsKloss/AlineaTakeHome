@@ -2,9 +2,10 @@
 
 ## Demo
 
-<video src="https://github.com/ndrsKloss/AlineaTakeHome/raw/main/docs/demo.mov" controls width="300"></video>
+[<img src="docs/demo-poster.png" width="300" alt="App demo — click to play">](docs/demo.mp4)
 
-> If the video doesn't play inline, [download / view it here](docs/demo.mov).
+▶︎ **[Watch the demo](docs/demo.mp4)** — click the screenshot above (or the link)
+to play the recording.
 
 ---
 
