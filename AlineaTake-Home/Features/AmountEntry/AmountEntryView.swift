@@ -142,7 +142,11 @@ struct AmountEntryView: View {
     }
 
     private func tapDelete() {
-        withAnimation(amountEditAnimation) { viewModel.didTapDelete() }
+        // Deleting the last character returns to the empty placeholder; the fade
+        // to "$|0" is unwanted, so snap the amount for that step. The chips↔Review
+        // swap and the top glow keep their own animations (design-spec §10 #3).
+        let animation = viewModel.deleteClearsAmount ? nil : amountEditAnimation
+        withAnimation(animation) { viewModel.didTapDelete() }
     }
 
     private func selectSuggestion(_ value: Int) {

@@ -53,6 +53,13 @@ final class AmountEntryViewModel {
         entry.isEmpty
     }
 
+    /// Whether the next delete returns the amount to the empty placeholder — the
+    /// screen skips the edit animation for that step so the amount snaps to `$|0`
+    /// instead of fading. `false` when already empty (a delete-on-empty no-op).
+    var deleteClearsAmount: Bool {
+        !entry.isEmpty && entry.deletingLast().isEmpty
+    }
+
     /// Whether the keypad's decimal key accepts taps — enabled unless a separator
     /// is already present (resolves design-spec §12 Q1).
     var isDecimalEnabled: Bool {
