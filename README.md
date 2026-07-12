@@ -1,5 +1,13 @@
 # Alinea — Amount Entry
 
+## Demo
+
+<video src="https://github.com/ndrsKloss/AlineaTakeHome/raw/main/docs/demo.mov" controls width="300"></video>
+
+> If the video doesn't play inline, [download / view it here](docs/demo.mov).
+
+---
+
 Built spec-first — the design, non-functional requirements, and architecture are
 captured under [`AlineaTake-Home/spec/`](AlineaTake-Home/spec/) and treated as the
 source of truth (see [`CLAUDE.md`](CLAUDE.md)).
