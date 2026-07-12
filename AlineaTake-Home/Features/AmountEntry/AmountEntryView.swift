@@ -81,9 +81,9 @@ struct AmountEntryView: View {
                 AlineaKeyboard(
                     decimalSeparator: viewModel.decimalSeparator,
                     isDecimalEnabled: viewModel.isDecimalEnabled,
-                    onDigit: viewModel.didTapDigit,
-                    onDecimal: viewModel.didTapDecimal,
-                    onDelete: viewModel.didTapDelete
+                    onDigit: tapDigit,
+                    onDecimal: tapDecimal,
+                    onDelete: tapDelete
                 )
                 .padding(.horizontal, .keypadSideMargin)
             }
@@ -119,6 +119,35 @@ struct AmountEntryView: View {
     /// Scale + fade normally; plain fade under Reduce Motion.
     private var bandTransition: AnyTransition {
         reduceMotion ? .opacity : .scale(scale: 0.92).combined(with: .opacity)
+    }
+
+    // MARK: Amount-edit intents
+    //
+    // Each mutation runs inside one explicit animated transaction so the
+    // display's declared transitions play together — the digit roll
+    // (`.contentTransition(.numericText())`) *and* the placeholder ⇄ filled
+    // crossfade (chip select, first digit, delete-to-empty). Instant under
+    // Reduce Motion (`NFR-A11Y`).
+
+    /// The amount-edit animation; `nil` (no animation) under Reduce Motion.
+    private var amountEditAnimation: Animation? {
+        reduceMotion ? nil : Layout.amountEdit
+    }
+
+    private func tapDigit(_ digit: Int) {
+        withAnimation(amountEditAnimation) { viewModel.didTapDigit(digit) }
+    }
+
+    private func tapDecimal() {
+        withAnimation(amountEditAnimation) { viewModel.didTapDecimal() }
+    }
+
+    private func tapDelete() {
+        withAnimation(amountEditAnimation) { viewModel.didTapDelete() }
+    }
+
+    private func selectSuggestion(_ value: Int) {
+        withAnimation(amountEditAnimation) { viewModel.didSelectSuggestion(value) }
     }
 
     /// State B's top glow (design-spec §3.2)
@@ -159,7 +188,7 @@ struct AmountEntryView: View {
             HStack(spacing: 0) {
                 ForEach(viewModel.suggestions, id: \.self) { value in
                     AlineaChip(viewModel.suggestionLabel(value)) {
-                        viewModel.didSelectSuggestion(value)
+                        selectSuggestion(value)
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -173,6 +202,11 @@ private enum Layout {
     /// Reserved action-band height — the taller of the chip row (44) and the
     /// Review button (48), so the keypad doesn't shift during the swap.
     static let actionBandHeight: CGFloat = 50
+
+    /// Amount-edit animation (digit roll + placeholder⇄filled crossfade).
+    /// `.smooth` (zero-bounce spring) — `.snappy`'s overshoot read as a
+    /// vertical lurch at the 100pt display size.
+    static let amountEdit: Animation = .smooth
 
     // Top glow (radial #FFFFFF → 0%).
     /// Diameter of the glow circle.

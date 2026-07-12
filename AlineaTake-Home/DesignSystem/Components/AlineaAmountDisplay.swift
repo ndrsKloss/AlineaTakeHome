@@ -8,6 +8,14 @@ import SwiftUI
 /// tells the display whether it's the faint placeholder and whether to show the
 /// trailing caret; the amount value, locale formatting, and caret/placeholder
 /// rules are owned by the view model (design-spec §10.5, §12).
+///
+/// The component *declares* its transitions — `.contentTransition(.numericText())`
+/// rolls the digits odometer-style, and the placeholder ⇄ filled branches
+/// crossfade via `.transition(.opacity)` — but plays them only when the caller
+/// mutates the value inside an animated transaction (`withAnimation`, owned by
+/// `AmountEntryView`, which also gates it on Reduce Motion). An ancestor
+/// `.animation(_:value:)` proved unreliable for the branch swap, hence the
+/// explicit-transaction design.
 struct AlineaAmountDisplay: View {
     private let text: String
     private let isPlaceholder: Bool
@@ -63,6 +71,7 @@ struct AlineaAmountDisplay: View {
                 AmountCaret()
                 glyphs(value).frame(maxWidth: .infinity, alignment: .leading)
             }
+            .transition(.opacity)
         } else {
             // Filled (or no caret): the caret trails the value.
             HStack(spacing: Layout.caretGap) {
@@ -71,15 +80,39 @@ struct AlineaAmountDisplay: View {
                     AmountCaret()
                 }
             }
+            .transition(.opacity)
         }
     }
 
     private func glyphs(_ string: String) -> some View {
+        // A hidden twin drives layout with animation disabled, so the frame
+        // snaps to the final width immediately; the visible text in its
+        // overlay is then always proposed that final size, and the digit roll
+        // plays inside an already-final frame. Without this, the frame
+        // interpolates old→new width while `.numericText()` lays the new
+        // string out at full size, and the glyph nearest the moving edge (the
+        // leading `$`) is clipped mid-animation. The `.transaction` scope ends
+        // before `.overlay`, so the visible text keeps the animated
+        // transaction from the screen's `withAnimation` (roll + crossfade).
+        glyphText(string)
+            .hidden()
+            .transaction { $0.animation = nil }
+            .overlay(
+                glyphText(string)
+                    .foregroundStyle(valueFill)
+                    // Roll digits odometer-style as the value is edited. The
+                    // animation transaction is owned by `AmountEntryView`.
+                    .contentTransition(.numericText())
+            )
+    }
+
+    /// The shared text configuration for the layout twin and the visible copy —
+    /// both must agree on size so the §10.7 long-amount shrink still applies.
+    private func glyphText(_ string: String) -> some View {
         Text(verbatim: string)
             .textStyle(.display)
             .lineLimit(1)
             .minimumScaleFactor(Layout.minScale) // shrink long amounts (design-spec §10.7)
-            .foregroundStyle(valueFill)
     }
 
     /// Placeholder → the faint ghost role; filled → the design's near-white radial
