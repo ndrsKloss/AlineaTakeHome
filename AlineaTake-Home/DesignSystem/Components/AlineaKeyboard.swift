@@ -55,6 +55,12 @@ struct AlineaKeyboard: View {
                 .frame(height: Layout.rowHeight)
             }
         }
+        // The row pitch is a fixed Figma 68pt (design-spec §9). The digits scale
+        // with Dynamic Type, so cap the keypad's range at the largest size whose
+        // glyph still fits the 68pt row — beyond it the digits would clip
+        // (`NFR-A11Y-004`). Touch targets stay ≥44pt via `AlineaNumber`'s
+        // `minHeight`, independent of this cap (`NFR-A11Y-006`).
+        .dynamicTypeSize(...Layout.maxDynamicTypeSize)
     }
 
     @ViewBuilder
@@ -89,6 +95,10 @@ private enum Layout {
     /// Figma keyboard row pitch (design-spec §9 / node 2007:141), sourced from
     /// the shared `keypadRowPitch` token so the value has a single home.
     static let rowHeight: CGFloat = .keypadRowPitch
+    /// Largest Dynamic Type size the keypad honors before a scaled digit clips
+    /// the fixed `rowHeight` (empirically verified). Standard sizes and the
+    /// lower accessibility sizes still scale (`NFR-A11Y-001/002`).
+    static let maxDynamicTypeSize: DynamicTypeSize = .accessibility1
     /// Backspace glyph size (design-spec §3.4, ~51.095 × 46.593).
     static let deleteWidth: CGFloat = 51
     static let deleteHeight: CGFloat = 47

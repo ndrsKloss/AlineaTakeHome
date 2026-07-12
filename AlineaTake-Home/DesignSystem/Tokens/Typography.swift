@@ -1,13 +1,35 @@
 import SwiftUI
-import UIKit
 
 /// A text style token: a font paired with the letter-spacing and line-spacing
 /// captured from Figma.
 ///
-/// Applied via `.textStyle(_:)`. Fonts scale with Dynamic Type via
-/// `UIFontMetrics` (`NFR-A11Y-001/002`).
+/// Applied via `.textStyle(_:)`. Custom-font roles use
+/// `Font.custom(_:size:relativeTo:)`, which SwiftUI rescales live with the
+/// user's text-size setting (`NFR-A11Y-001/002`). System-font roles cannot be a
+/// static, live-scaling `Font`, so they use `AlineaScalableSystemStyle` instead.
 struct AlineaTextStyle {
     let font: Font
+    /// Letter spacing (points), from Figma tracking.
+    let tracking: CGFloat
+    /// Additional line spacing (points).
+    let lineSpacing: CGFloat
+}
+
+/// A text style token for a **system** (SF Pro) role at a custom point size that
+/// must scale with Dynamic Type.
+///
+/// SF Pro has no `Font.custom(_:size:relativeTo:)` equivalent, and
+/// `Font.system(size:)` is a *fixed* size that ignores Dynamic Type. A static
+/// `Font(UIFontMetrics…scaledFont(for:))` bakes in the size category present at
+/// static-init and never re-scales. So the base size is carried as data here and
+/// scaled at render time via `@ScaledMetric` (see the `.textStyle(_:)` overload),
+/// which is the idiomatic live-scaling mechanism (`NFR-A11Y-002`).
+struct AlineaScalableSystemStyle {
+    /// Base point size at the default text size.
+    let size: CGFloat
+    let weight: Font.Weight
+    /// The text style whose Dynamic-Type curve the size scales along.
+    let relativeTo: Font.TextStyle
     /// Letter spacing (points), from Figma tracking.
     let tracking: CGFloat
     /// Additional line spacing (points).
@@ -30,17 +52,6 @@ extension AlineaTextStyle {
         .custom(name, size: size, relativeTo: textStyle)
     }
 
-    /// A Dynamic-Type-scalable system font at a fixed size (for SF Pro roles,
-    /// which have no `Font.custom` equivalent). Scaled with `UIFontMetrics`.
-    private static func scalableSystemFont(
-        size: CGFloat,
-        weight: UIFont.Weight,
-        relativeTo textStyle: UIFont.TextStyle
-    ) -> Font {
-        let base = UIFont.systemFont(ofSize: size, weight: weight)
-        return Font(UIFontMetrics(forTextStyle: textStyle).scaledFont(for: base))
-    }
-
     /// Large amount display — GT Flexa Condensed Medium 100 / lh 1.0 / −2.
     static let display = AlineaTextStyle(
         font: customFont(AlineaFonts.Name.gtFlexaCondensedMedium, size: 100, relativeTo: .largeTitle),
@@ -51,13 +62,6 @@ extension AlineaTextStyle {
     /// Title 2 Medium (Review label) — GT Flexa Condensed Medium 24 / lh 1.0 / −3.
     static let title2 = AlineaTextStyle(
         font: customFont(AlineaFonts.Name.gtFlexaCondensedMedium, size: 24, relativeTo: .title2),
-        tracking: 0,
-        lineSpacing: 0
-    )
-
-    /// Keypad digits — SF Pro Medium 36.647 / −1.0994 (system font by design).
-    static let keypadDigit = AlineaTextStyle(
-        font: scalableSystemFont(size: 36, weight: .medium, relativeTo: .title1),
         tracking: 0,
         lineSpacing: 0
     )
@@ -78,6 +82,20 @@ extension AlineaTextStyle {
     )
 }
 
+extension AlineaScalableSystemStyle {
+
+    /// Keypad digits — SF Pro Medium 36.647 / −1.0994 (system font by design).
+    /// Scales with Dynamic Type relative to `.title` (SwiftUI's name for the
+    /// `UIFont.TextStyle.title1` curve this role previously used).
+    static let keypadDigit = AlineaScalableSystemStyle(
+        size: 36,
+        weight: .medium,
+        relativeTo: .title,
+        tracking: 0,
+        lineSpacing: 0
+    )
+}
+
 extension View {
     /// Applies an `AlineaTextStyle` token (font + tracking + line spacing).
     func textStyle(_ style: AlineaTextStyle) -> some View {
@@ -85,5 +103,34 @@ extension View {
             .font(style.font)
             .tracking(style.tracking)
             .lineSpacing(style.lineSpacing)
+    }
+
+    /// Applies an `AlineaScalableSystemStyle` token, live-scaling the system
+    /// font's point size with Dynamic Type via `@ScaledMetric`.
+    func textStyle(_ style: AlineaScalableSystemStyle) -> some View {
+        modifier(ScalableSystemStyleModifier(style))
+    }
+}
+
+/// Carries the `@ScaledMetric` size so an `AlineaScalableSystemStyle`'s system
+/// font re-scales live with the user's text-size setting (`NFR-A11Y-002`).
+private struct ScalableSystemStyleModifier: ViewModifier {
+    let weight: Font.Weight
+    let tracking: CGFloat
+    let lineSpacing: CGFloat
+    @ScaledMetric private var size: CGFloat
+
+    init(_ style: AlineaScalableSystemStyle) {
+        self._size = ScaledMetric(wrappedValue: style.size, relativeTo: style.relativeTo)
+        self.weight = style.weight
+        self.tracking = style.tracking
+        self.lineSpacing = style.lineSpacing
+    }
+
+    func body(content: Content) -> some View {
+        content
+            .font(.system(size: size, weight: weight))
+            .tracking(tracking)
+            .lineSpacing(lineSpacing)
     }
 }
