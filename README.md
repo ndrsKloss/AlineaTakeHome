@@ -2,10 +2,14 @@
 
 ## Demo
 
-[<img src="docs/demo-poster.png" width="300" alt="App demo — click to play">](docs/demo.mp4)
+<p>
+  <a href="docs/demo.mp4"><img src="docs/state-a.png" width="240" alt="State A — empty amount with suggestion bubbles"></a>
+  <a href="docs/demo.mp4"><img src="docs/state-b.png" width="240" alt="State B — amount entered with animated Review button"></a>
+  <a href="docs/demo.mp4"><img src="docs/design-system.png" width="240" alt="Design system catalog — colors & typography"></a>
+</p>
 
-▶︎ **[Watch the demo](docs/demo.mp4)** — click the screenshot above (or the link)
-to play the recording.
+▶︎ **[Watch the demo](docs/demo.mp4)** — click any screenshot above (or the link)
+to play the recording. State A and State B mirror the Figma example.
 
 ---
 
