@@ -86,8 +86,9 @@ struct AlineaKeyboard: View {
 }
 
 private enum Layout {
-    /// 66 — Figma keyboard row pitch (design-spec §9 / node 2007:141).
-    static let rowHeight: CGFloat = 66
+    /// Figma keyboard row pitch (design-spec §9 / node 2007:141), sourced from
+    /// the shared `keypadRowPitch` token so the value has a single home.
+    static let rowHeight: CGFloat = .keypadRowPitch
     /// Backspace glyph size (design-spec §3.4, ~51.095 × 46.593).
     static let deleteWidth: CGFloat = 51
     static let deleteHeight: CGFloat = 47
