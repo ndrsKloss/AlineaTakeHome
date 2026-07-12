@@ -69,7 +69,8 @@ struct AmountEntryView: View {
                 AlineaAmountDisplay(
                     viewModel.amountText,
                     isPlaceholder: viewModel.isAmountPlaceholder,
-                    showCaret: true
+                    showCaret: true,
+                    accessibilityLabel: viewModel.amountAccessibilityLabel
                 )
                 .padding(.horizontal, .defaultMargins)
 
@@ -204,7 +205,10 @@ struct AmountEntryView: View {
         GlassEffectContainer {
             HStack(spacing: 0) {
                 ForEach(viewModel.suggestions, id: \.self) { value in
-                    AlineaChip(viewModel.suggestionLabel(value)) {
+                    AlineaChip(
+                        viewModel.suggestionLabel(value),
+                        accessibilityLabel: viewModel.suggestionAccessibilityLabel(value)
+                    ) {
                         selectSuggestion(value)
                     }
                     .frame(maxWidth: .infinity)

@@ -50,6 +50,34 @@ enum AmountFormatter {
         currency(wholeAmount, locale: locale)
     }
 
+    /// A VoiceOver-friendly spoken amount for `AlineaAmountDisplay`. Uses the
+    /// **full currency name** so VoiceOver reads a natural phrase ("2,000 US
+    /// dollars" / "2.000 reais brasileiros" / "2.000 euros") instead of the raw
+    /// symbol string, which reads awkwardly in pt-BR/es (`NFR-LOC-009`). The
+    /// visible string keeps its symbol form (`display(_:locale:)`); only the
+    /// spoken label differs. Fraction precision follows what the user has typed.
+    static func spoken(_ entry: AmountEntry, locale: Locale) -> String {
+        spoken(
+            entry.decimalValue,
+            fractionDigits: entry.hasDecimalSeparator ? entry.fractionDigits.count : 0,
+            locale: locale
+        )
+    }
+
+    /// Spoken suggestion-chip label for a whole amount (full currency name).
+    static func spokenLabel(wholeAmount: Int, locale: Locale) -> String {
+        spoken(Decimal(max(0, wholeAmount)), fractionDigits: 0, locale: locale)
+    }
+
+    private static func spoken(_ value: Decimal, fractionDigits: Int, locale: Locale) -> String {
+        value.formatted(
+            .currency(code: currencyCode(for: locale))
+                .locale(locale)
+                .presentation(.fullName)
+                .precision(.fractionLength(fractionDigits))
+        )
+    }
+
     /// The integer part rendered as locale-derived currency with no fraction digits —
     /// the live fraction is appended by `display(_:locale:)`. Symbol, placement,
     /// spacing and grouping all come from Foundation, never manual assembly

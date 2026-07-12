@@ -48,6 +48,13 @@ final class AmountEntryViewModel {
         AmountFormatter.display(entry, locale: locale)
     }
 
+    /// VoiceOver reading for the amount — a natural spoken currency phrase
+    /// ("2,000 US dollars" / "2.000 reais brasileiros") rather than the raw
+    /// symbol string the display shows (`NFR-LOC-009`).
+    var amountAccessibilityLabel: String {
+        AmountFormatter.spoken(entry, locale: locale)
+    }
+
     /// Whether the amount is the faint `$0` placeholder vs an entered value.
     var isAmountPlaceholder: Bool {
         entry.isEmpty
@@ -81,6 +88,12 @@ final class AmountEntryViewModel {
     /// Locale-formatted chip label (e.g. `$2,000`) for a suggestion value.
     func suggestionLabel(_ value: Int) -> String {
         AmountFormatter.label(wholeAmount: value, locale: locale)
+    }
+
+    /// VoiceOver reading for a suggestion chip — the spoken currency phrase
+    /// (full currency name) rather than the verbatim symbol label (`NFR-LOC-009`).
+    func suggestionAccessibilityLabel(_ value: Int) -> String {
+        AmountFormatter.spokenLabel(wholeAmount: value, locale: locale)
     }
 
     func didSelectSuggestion(_ value: Int) {

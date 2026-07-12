@@ -16,10 +16,18 @@ import SwiftUI
 /// neighbouring glass shapes render/blend correctly.
 struct AlineaChip: View {
     private let title: String
+    private let accessibilityLabel: String?
     private let action: () -> Void
 
-    init(_ title: String, action: @escaping () -> Void) {
+    /// - Parameters:
+    ///   - title: The verbatim pre-formatted amount shown on the pill.
+    ///   - accessibilityLabel: Optional VoiceOver reading. When `nil`, the
+    ///     verbatim `title` is spoken; callers pass a natural spoken currency
+    ///     phrase so VoiceOver doesn't read the raw symbol string (`NFR-LOC-009`).
+    ///   - action: Reported on tap.
+    init(_ title: String, accessibilityLabel: String? = nil, action: @escaping () -> Void) {
         self.title = title
+        self.accessibilityLabel = accessibilityLabel
         self.action = action
     }
 
@@ -34,6 +42,7 @@ struct AlineaChip: View {
                 .contentShape(.capsule)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(Text(verbatim: accessibilityLabel ?? title))
     }
 }
 

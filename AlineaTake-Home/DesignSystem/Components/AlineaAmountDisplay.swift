@@ -20,6 +20,7 @@ struct AlineaAmountDisplay: View {
     private let text: String
     private let isPlaceholder: Bool
     private let showCaret: Bool
+    private let accessibilityLabel: String?
 
     /// - Parameters:
     ///   - text: The pre-formatted amount (e.g. `"$0"`, `"$2,000"`). Verbatim —
@@ -28,20 +29,27 @@ struct AlineaAmountDisplay: View {
     ///     value fill (filled state).
     ///   - showCaret: Whether the blinking end-caret trails the value
     ///     (design-spec §10.5; filled-state caret is caller's call — §12 Q3).
+    ///   - accessibilityLabel: Optional VoiceOver reading. When `nil`, the
+    ///     verbatim `text` is spoken; callers pass a natural spoken currency
+    ///     phrase (e.g. "2.000 reais brasileiros") so VoiceOver doesn't read the
+    ///     raw symbol string (`NFR-LOC-009`).
     init(
         _ text: String,
         isPlaceholder: Bool,
-        showCaret: Bool = false
+        showCaret: Bool = false,
+        accessibilityLabel: String? = nil
     ) {
         self.text = text
         self.isPlaceholder = isPlaceholder
         self.showCaret = showCaret
+        self.accessibilityLabel = accessibilityLabel
     }
 
     var body: some View {
         content
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text(verbatim: text))
+            .accessibilityLabel(Text(verbatim: accessibilityLabel ?? text))
+            .accessibilityIdentifier("amountDisplay")
     }
 
     @ViewBuilder
