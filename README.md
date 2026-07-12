@@ -41,6 +41,12 @@ All three NFR areas are implemented ([non-functional-requirements](AlineaTake-Ho
 - **Dynamic Type** — text scales with the system setting, including the bundled
   **custom fonts**; the amount display reconciles content-driven shrink-to-fit
   with Dynamic Type.
+- **Fonts & assets** — the design's custom fonts (**GT Flexa Condensed Medium**
+  and **Instrument Sans SemiCondensed Medium**) are bundled and registered at
+  launch via Core Text (`AlineaFonts`), then applied through the typography
+  tokens. All image assets are exported from the Figma file (`ic_chevron`,
+  `ic_delete_numpad`, `img_badge_border`) and rendered as template images so they
+  tint per appearance.
 
 ### Designing for a Broader Investor Base
 
@@ -58,6 +64,47 @@ The implementation includes support for:
 * Light and dark appearance support
 
 The current layout supports Dynamic Type up to the largest accessibility size that can be accommodated without compromising the screen’s hierarchy, usability, or interaction model. Supporting more extreme text sizes would likely require a dedicated accessibility layout rather than simply scaling the existing design—for example, restructuring horizontal components, changing control proportions, or introducing alternative presentation patterns.
+
+---
+
+## Design system & catalog
+
+The Figma design is translated into a small, two-tier design system under
+`DesignSystem/` rather than one-off view code:
+
+- **Tokens** — the design's vocabulary is captured as named tokens
+  (`ColorPalette`/`SemanticColors`, `Spacing`, `Radius`, `Typography`). Feature
+  code and components reference semantic roles, never raw literals, so a single
+  change re-themes the app and every value stays traceable back to the design.
+- **Components** — each repeated Figma element is its own reusable, token-driven
+  SwiftUI component (`AlineaAmountDisplay`, `AlineaKeyboard`, `AlineaChip`,
+  `AlineaSpecialButton`, `AlineaAppBar`, `AlineaAutomatedBadge`, `AlineaNumber`).
+- **Catalog** — a DEBUG-only `DesignSystemCatalogView` renders every component and
+  token (colors, typography, spacing, radii) in isolation, mirroring the Figma
+  design so the pieces can be reviewed and QA'd outside the screen itself.
+
+**A note on Figma values:** several spacings and sizes in the Figma file are
+non-integer (e.g. keypad glyphs at `36.647`, a `29.869` pill radius, sub-pixel
+offsets). Rather than hard-code every fractional value, we reconciled them to
+clean, consistent token values that best represent the intended design while
+keeping the layout coherent across device sizes, Dynamic Type, and both
+appearances. The result stays faithful to the design without inheriting
+measurement artifacts from the source file.
+
+**A note on visual effects:** a few decorative effects — notably the Review
+button's gradient halo and the top glow behind the amount — were tuned to be
+slightly more prominent than the Figma source. This is a deliberate choice to
+make the animated/glow work clearly evident to the team evaluating the
+submission, not an accidental deviation from the design.
+
+### A note on code comments
+
+The source is intentionally heavily commented — most types and non-obvious
+decisions carry inline rationale (often referencing the exact spec requirement,
+e.g. `NFR-LOC-011` or `design-spec §10.7`). This verbosity is deliberate: it
+gives AI coding agents the context they need to navigate the codebase and make
+correct, spec-aligned changes, keeping the design intent traceable directly from
+the code rather than only from the specs.
 
 ---
 
