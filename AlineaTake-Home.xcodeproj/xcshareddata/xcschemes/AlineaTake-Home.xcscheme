@@ -52,6 +52,17 @@
                ReferencedContainer = "container:AlineaTake-Home.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7186AD5E300408040050669E"
+               BuildableName = "AlineaTake-HomeUITests.xctest"
+               BlueprintName = "AlineaTake-HomeUITests"
+               ReferencedContainer = "container:AlineaTake-Home.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

@@ -32,9 +32,11 @@ All eight are implemented:
 
 All three NFR areas are implemented ([non-functional-requirements](AlineaTake-Home/spec/non-functional-requirements.md)):
 
-- **Localization** — English (base), Brazilian Portuguese, and Spanish via a
-  String Catalog; **locale-aware** currency/number formatting (`$1,234.56` /
-  `R$ 1.234,56`). No hard-coded user-facing strings.
+- **Localization & internationalization (l10n / i18n)** — English (base),
+  Brazilian Portuguese, and Spanish via a String Catalog; **locale-aware**
+  currency/number formatting (`$10,000.50` / `R$ 10.000,50` / `10.000,50 €`).
+  Currency is region-derived, so Spanish resolves to **EUR** in Spain and
+  **MXN** in Mexico. No hard-coded user-facing strings.
 - **Light + Dark Mode** — semantic, appearance-adaptive color roles
   (`SemanticColors`); Dark is the Figma design verbatim, Light is a derived,
   WCAG-AA re-theme.
@@ -45,12 +47,14 @@ All three NFR areas are implemented ([non-functional-requirements](AlineaTake-Ho
   and **Instrument Sans SemiCondensed Medium**) are bundled and registered at
   launch via Core Text (`AlineaFonts`), then applied through the typography
   tokens. All image assets are exported from the Figma file (`ic_chevron`,
-  `ic_delete_numpad`, `img_badge_border`) and rendered as template images so they
-  tint per appearance.
+  `ic_delete_numpad`, `img_badge_border`). The `ic_chevron` and `ic_delete_numpad`
+  glyphs are template-rendered and tint per appearance; `img_badge_border` is a
+  holographic-foil texture rendered verbatim and is intentionally
+  appearance-independent (brand identity).
 
 ### Designing for a Broader Investor Base
 
-Because Alinea is an investment platform, accessibility is not only a technical quality attribute—it is also a product and business consideration.
+Because Alinea is an investment platform, accessibility (a11y) is not only a technical quality attribute—it is also a product and business consideration.
 
 People with visual or hearing impairments also invest, manage their finances, and make financial decisions. Excluding these users means unnecessarily limiting the platform’s potential audience. For that reason, I went beyond the core visual implementation and treated accessibility, localization, and adaptive typography as foundational requirements rather than optional enhancements.
 
@@ -119,13 +123,18 @@ xcodebuild -project AlineaTake-Home.xcodeproj -scheme AlineaTake-Home \
 
 ### Tests
 
-Swift Testing (`@Test` / `#expect`) in the `AlineaTake-HomeTests` target — 32
-tests across the entry model, formatter, and view model:
+Swift Testing (`@Test` / `#expect`) in the `AlineaTake-HomeTests` target — 41
+tests across the entry model, formatter, view model, and accessibility (spoken
+VoiceOver values + per-language localized labels):
 
 ```bash
 xcodebuild test -project AlineaTake-Home.xcodeproj -scheme AlineaTake-Home \
   -destination "id=<simulator-udid>"
 ```
+
+A separate `AlineaTake-HomeUITests` XCUITest target (`VoiceOverLocalizationUITests`)
+drives the real accessibility tree in each language (en / pt-BR / es), asserting
+the localized VoiceOver labels and running Apple's automated accessibility audit.
 
 ### Testing locale & appearance
 
