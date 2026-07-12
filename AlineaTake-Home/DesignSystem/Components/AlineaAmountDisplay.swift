@@ -46,24 +46,29 @@ struct AlineaAmountDisplay: View {
 
     @ViewBuilder
     private var content: some View {
-        if showCaret, isPlaceholder, let split = text.firstIndex(where: \.isNumber) {
-            // Empty state renders "$|0": the caret marks the insertion point,
-            // between the currency symbol and the placeholder zero. The design
-            // pins the caret at the frame's horizontal centre (design-spec §3.1:
-            // caret at x≈197 ≈ 393/2), *not* the amount block — for a wide symbol
-            // like BRL's "R$" a centred block would still push the caret off to
-            // the right. Two equal `maxWidth: .infinity` halves share the space
-            // around the fixed-width caret, so the caret stays dead-centre for
-            // any symbol width: `lead` (symbol) hugs it from the left, `value`
-            // (digit + any trailing symbol) from the right.
+        if showCaret, isPlaceholder, let firstDigit = text.firstIndex(where: \.isNumber) {
+            // Empty state renders the caret on the boundary between the
+            // currency symbol and the placeholder zero, hugging the zero from
+            // the symbol's side: a *prefix* symbol puts the caret before the
+            // digits ("$|0", "R$|0"); a *suffix* symbol puts it after them
+            // ("0|€"). The design pins the caret at the frame's horizontal
+            // centre (design-spec §3.1: caret at x≈197 ≈ 393/2), *not* the
+            // amount block — for a wide symbol like BRL's "R$" a centred block
+            // would still push the caret off to the right. Two equal
+            // `maxWidth: .infinity` halves share the space around the
+            // fixed-width caret, so it stays dead-centre for any symbol width:
+            // `lead` hugs it from the left, `value` from the right.
             //
-            // Whitespace is trimmed at the split so the caret gets a symmetric
-            // `midCaretGap` on both sides regardless of the currency's own
-            // symbol↔number separator (`.whitespaces` includes the no-break
-            // space). Interior separators — e.g. the `\u{00A0}` between `0` and
-            // `€` in es-ES `0\u{00A0}€` — are preserved as they are not
-            // surrounding whitespace; a suffix currency leaves `lead` empty,
-            // whose flexible half still keeps the caret centred.
+            // Prefix vs suffix is detected by whether any non-whitespace char
+            // precedes the first digit. The split falls on the symbol↔number
+            // boundary either way, and its surrounding whitespace is trimmed —
+            // so the currency's own separator (`.whitespaces` includes the
+            // no-break space, e.g. the `\u{00A0}` in `R$ 0` or `0\u{00A0}€`) is
+            // replaced by a symmetric `midCaretGap` on both sides of the caret.
+            let hasPrefixSymbol = text[..<firstDigit].contains { !$0.isWhitespace }
+            let split = hasPrefixSymbol
+                ? firstDigit
+                : (text[firstDigit...].firstIndex { !$0.isNumber } ?? text.endIndex)
             let lead = String(text[..<split]).trimmingCharacters(in: .whitespaces)
             let value = String(text[split...]).trimmingCharacters(in: .whitespaces)
             HStack(spacing: Layout.midCaretGap) {
