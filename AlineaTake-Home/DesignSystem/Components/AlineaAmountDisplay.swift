@@ -9,13 +9,13 @@ import SwiftUI
 /// trailing caret; the amount value, locale formatting, and caret/placeholder
 /// rules are owned by the view model (design-spec §10.5, §12).
 ///
-/// The component *declares* its transitions — `.contentTransition(.numericText())`
-/// rolls the digits odometer-style, and the placeholder ⇄ filled branches
-/// crossfade via `.transition(.opacity)` — but plays them only when the caller
-/// mutates the value inside an animated transaction (`withAnimation`, owned by
-/// `AmountEntryView`, which also gates it on Reduce Motion). An ancestor
-/// `.animation(_:value:)` proved unreliable for the branch swap, hence the
-/// explicit-transaction design.
+/// The component *declares* its transitions — value edits blur-crossfade the
+/// whole value (old value blurs + fades out while the new one blurs in), and
+/// the placeholder ⇄ filled branches crossfade via `.transition(.opacity)` —
+/// but plays them only when the caller mutates the value inside an animated
+/// transaction (`withAnimation`, owned by `AmountEntryView`, which also gates
+/// it on Reduce Motion). An ancestor `.animation(_:value:)` proved unreliable
+/// for the branch swap, hence the explicit-transaction design.
 struct AlineaAmountDisplay: View {
     private let text: String
     private let isPlaceholder: Bool
@@ -85,26 +85,51 @@ struct AlineaAmountDisplay: View {
     }
 
     private func glyphs(_ string: String) -> some View {
-        // A hidden twin drives layout with animation disabled, so the frame
-        // snaps to the final width immediately; the visible text in its
-        // overlay is then always proposed that final size, and the digit roll
-        // plays inside an already-final frame. Without this, the frame
-        // interpolates old→new width while `.numericText()` lays the new
-        // string out at full size, and the glyph nearest the moving edge (the
-        // leading `$`) is clipped mid-animation. The `.transaction` scope ends
-        // before `.overlay`, so the visible text keeps the animated
-        // transaction from the screen's `withAnimation` (roll + crossfade).
+        // A hidden twin drives layout with the width animation suppressed, so
+        // the frame snaps to the final width immediately; the visible text in
+        // its overlay is then always proposed that final size, and the value
+        // crossfade plays inside an already-final frame. Without this, the
+        // frame interpolates old→new width while the incoming string lays out
+        // at full size, and the glyph nearest the moving edge (the leading
+        // `$`) is clipped mid-animation. The `.transaction` scope ends before
+        // `.overlay`, so the visible text keeps the animated transaction from
+        // the screen's `withAnimation` (value + branch crossfades).
+        //
+        // The snap is directional: clipping only happens while the frame
+        // *grows* (mid-animation frame narrower than the final-size content).
+        // When the edit can only shorten the text (delete — flagged by the
+        // screen via `Transaction.amountMayShrink`), the mid-animation frame
+        // is always at least as wide as the final content, so the width is
+        // left animated: the value glides narrower with the caret instead of
+        // snapping in one frame.
         glyphText(string)
             .hidden()
-            .transaction { $0.animation = nil }
+            .transaction { txn in
+                if !txn.amountMayShrink {
+                    txn.animation = nil
+                }
+            }
             .overlay(
                 glyphText(string)
                     .foregroundStyle(valueFill)
-                    // Roll digits odometer-style as the value is edited. The
-                    // animation transaction is owned by `AmountEntryView`.
-                    .contentTransition(.numericText())
+                    // Blur-crossfade the whole value on edits: `.id` swaps the
+                    // view identity per string, so the outgoing value blurs +
+                    // fades out while the incoming one blurs in. The animation
+                    // transaction is owned by `AmountEntryView`.
+                    .transition(Self.valueSwap)
+                    .id(string)
             )
     }
+
+    /// The value-edit transition: opacity combined with a soft blur, so a
+    /// change reads as the old value dissolving into the new one rather than
+    /// a hard swap.
+    private static let valueSwap: AnyTransition = .opacity.combined(
+        with: .modifier(
+            active: BlurModifier(radius: Layout.editBlurRadius),
+            identity: BlurModifier(radius: 0)
+        )
+    )
 
     /// The shared text configuration for the layout twin and the visible copy —
     /// both must agree on size so the §10.7 long-amount shrink still applies.
@@ -130,6 +155,36 @@ struct AlineaAmountDisplay: View {
                 )
             )
         }
+    }
+}
+
+/// Blurs its content — the animatable half of the value-edit transition
+/// (`AnyTransition.modifier` needs a `ViewModifier` pair to interpolate).
+private struct BlurModifier: ViewModifier {
+    let radius: CGFloat
+
+    func body(content: Content) -> some View {
+        content.blur(radius: radius)
+    }
+}
+
+/// Marks a transaction as an amount edit that can only *shorten* the text
+/// (delete). `AlineaAmountDisplay` reads it to decide whether the value frame
+/// may animate its width: shrinking never clips (the frame stays at least as
+/// wide as the final content mid-animation), so the deleted digit gets to roll
+/// out; the default `false` keeps the snap-to-final-width behavior that
+/// protects growing edits from edge clipping.
+enum AmountShrinkTransactionKey: TransactionKey {
+    static let defaultValue = false
+}
+
+extension Transaction {
+    /// Whether the current amount edit can only shorten the displayed text.
+    /// Set by the screen (`AmountEntryView`) on delete; read by
+    /// `AlineaAmountDisplay`'s hidden layout twin.
+    var amountMayShrink: Bool {
+        get { self[AmountShrinkTransactionKey.self] }
+        set { self[AmountShrinkTransactionKey.self] = newValue }
     }
 }
 
@@ -175,6 +230,9 @@ private enum Layout {
     static let minScale: CGFloat = 0.4
     /// Radius of the value's radial sheen — wide enough to span the display line.
     static let valueSheenRadius: CGFloat = 200
+    /// Peak blur of the value-edit crossfade — soft enough to read as a
+    /// dissolve at the 100pt display size without smearing across the screen.
+    static let editBlurRadius: CGFloat = 10
 }
 
 #Preview("Dark") {

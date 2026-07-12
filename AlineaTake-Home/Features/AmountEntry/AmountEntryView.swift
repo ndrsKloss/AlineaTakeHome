@@ -124,10 +124,9 @@ struct AmountEntryView: View {
     // MARK: Amount-edit intents
     //
     // Each mutation runs inside one explicit animated transaction so the
-    // display's declared transitions play together — the digit roll
-    // (`.contentTransition(.numericText())`) *and* the placeholder ⇄ filled
-    // crossfade (chip select, first digit, delete-to-empty). Instant under
-    // Reduce Motion (`NFR-A11Y`).
+    // display's declared transitions play together — the value blur-crossfade
+    // *and* the placeholder ⇄ filled crossfade (chip select, first digit,
+    // delete-to-empty). Instant under Reduce Motion (`NFR-A11Y`).
 
     /// The amount-edit animation; `nil` (no animation) under Reduce Motion.
     private var amountEditAnimation: Animation? {
@@ -143,7 +142,13 @@ struct AmountEntryView: View {
     }
 
     private func tapDelete() {
-        withAnimation(amountEditAnimation) { viewModel.didTapDelete() }
+        // Delete can only shorten the text, so the display is allowed to
+        // animate its width shrink (the value glides narrower while it
+        // crossfades) instead of snapping to the final width like growing
+        // edits must.
+        var transaction = Transaction(animation: amountEditAnimation)
+        transaction.amountMayShrink = true
+        withTransaction(transaction) { viewModel.didTapDelete() }
     }
 
     private func selectSuggestion(_ value: Int) {
@@ -203,7 +208,7 @@ private enum Layout {
     /// Review button (48), so the keypad doesn't shift during the swap.
     static let actionBandHeight: CGFloat = 50
 
-    /// Amount-edit animation (digit roll + placeholder⇄filled crossfade).
+    /// Amount-edit animation (value blur-crossfade + placeholder⇄filled crossfade).
     /// `.smooth` (zero-bounce spring) — `.snappy`'s overshoot read as a
     /// vertical lurch at the 100pt display size.
     static let amountEdit: Animation = .smooth
