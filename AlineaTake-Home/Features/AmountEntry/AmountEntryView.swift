@@ -85,7 +85,10 @@ struct AmountEntryView: View {
                     onDecimal: tapDecimal,
                     onDelete: tapDelete
                 )
-                .padding(.horizontal, .keypadSideMargin)
+                // Fixed 130pt column pitch (design-spec §5), centered by the
+                // VStack; `maxWidth` shrinks gracefully on sub-390 widths rather
+                // than overflowing.
+                .frame(maxWidth: .keypadWidth)
             }
         }
         .toolbar(.hidden, for: .navigationBar)

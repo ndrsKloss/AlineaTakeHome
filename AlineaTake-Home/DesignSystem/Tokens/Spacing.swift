@@ -26,10 +26,12 @@ extension CGFloat {
     static let screenMarginButton: CGFloat = 24
     /// 40 — side margin of the suggestion-bubble row.
     static let screenMarginChips: CGFloat = 40
-    /// 46 — keypad side margin.
-    static let keypadSideMargin: CGFloat = 46
     /// 68 — vertical pitch between keypad rows.
     static let keypadRowPitch: CGFloat = 68
     /// 130 — horizontal pitch between keypad columns.
     static let keypadColumnPitch: CGFloat = 130
+    /// 390 — fixed keypad width (3 × column pitch). The keypad is centered at this
+    /// width so its columns keep the Figma 130pt pitch (design-spec §5) rather than
+    /// stretching with a screen-relative margin.
+    static let keypadWidth: CGFloat = keypadColumnPitch * 3
 }

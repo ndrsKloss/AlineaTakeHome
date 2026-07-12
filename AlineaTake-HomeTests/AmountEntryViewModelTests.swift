@@ -39,4 +39,36 @@ import Testing
         viewModel.didSelectSuggestion(2000)
         #expect(haptics.keyPressedCount == 0)
     }
+
+    // MARK: deleteClearsAmount — drives the screen's snap-to-empty on the
+    // clearing delete (the fade to "$|0" is skipped only for that step).
+
+    @Test func deleteClearsAmountForASingleDigit() {
+        // One integer digit → the next delete empties the field.
+        let (viewModel, _) = makeViewModel()
+        viewModel.didTapDigit(5)
+        #expect(viewModel.deleteClearsAmount)
+    }
+
+    @Test func deleteDoesNotClearAmountWithDigitsRemaining() {
+        // Two digits → the next delete leaves "5", so it does not clear.
+        let (viewModel, _) = makeViewModel()
+        viewModel.didTapDigit(5)
+        viewModel.didTapDigit(5)
+        #expect(!viewModel.deleteClearsAmount)
+    }
+
+    @Test func deleteDoesNotClearAmountWhenAlreadyEmpty() {
+        // Nothing entered → a delete is a no-op, not a clearing delete.
+        let (viewModel, _) = makeViewModel()
+        #expect(!viewModel.deleteClearsAmount)
+    }
+
+    @Test func deleteDoesNotClearAmountAtABareSeparator() {
+        // "5." → deleting removes the separator back to "5", not to empty.
+        let (viewModel, _) = makeViewModel()
+        viewModel.didTapDigit(5)
+        viewModel.didTapDecimal()
+        #expect(!viewModel.deleteClearsAmount)
+    }
 }
