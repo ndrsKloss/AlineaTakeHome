@@ -42,6 +42,23 @@ All three NFR areas are implemented ([non-functional-requirements](AlineaTake-Ho
   **custom fonts**; the amount display reconciles content-driven shrink-to-fit
   with Dynamic Type.
 
+### Designing for a Broader Investor Base
+
+Because Alinea is an investment platform, accessibility is not only a technical quality attribute—it is also a product and business consideration.
+
+People with visual or hearing impairments also invest, manage their finances, and make financial decisions. Excluding these users means unnecessarily limiting the platform’s potential audience. For that reason, I went beyond the core visual implementation and treated accessibility, localization, and adaptive typography as foundational requirements rather than optional enhancements.
+
+The implementation includes support for:
+
+* Dynamic Type
+* VoiceOver
+* Semantic accessibility labels and traits
+* Localization for Brazilian Portuguese, American English and Spanish
+* Locale-aware monetary formatting
+* Light and dark appearance support
+
+The current layout supports Dynamic Type up to the largest accessibility size that can be accommodated without compromising the screen’s hierarchy, usability, or interaction model. Supporting more extreme text sizes would likely require a dedicated accessibility layout rather than simply scaling the existing design—for example, restructuring horizontal components, changing control proportions, or introducing alternative presentation patterns.
+
 ---
 
 ## Build & run
