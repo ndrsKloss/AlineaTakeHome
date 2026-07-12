@@ -212,6 +212,9 @@ struct AmountEntryView: View {
                         selectSuggestion(value)
                     }
                     .frame(maxWidth: .infinity)
+                    // Stable handle for UI tests; the chip's a11y *label* is the
+                    // spoken currency phrase, which is brittle to query by.
+                    .accessibilityIdentifier("chip-\(value)")
                 }
             }
         }

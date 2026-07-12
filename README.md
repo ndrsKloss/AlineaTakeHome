@@ -143,6 +143,18 @@ accessibility tree** and runs Apple's automated accessibility audit:
   combination of language × appearance (light / dark) × text size
   (default / accessibility) and verifies it stays labeled, hit-testable, and
   audit-clean.
+- `AmountEntryInteractionUITests` — drives the keypad end-to-end (typing digits,
+  delete, decimal entry + disable rule, chip selection) and asserts the amount
+  and the empty⇄filled state respond.
+
+Run the UI tests with the helper (defaults to the interaction tests; pass a
+class, `Class/method`, or `all`):
+
+```bash
+./run-uitests.sh                              # AmountEntryInteractionUITests
+./run-uitests.sh VoiceOverLocalizationUITests
+./run-uitests.sh all                          # the whole UI-test target
+```
 
 ### Testing locale & appearance
 
