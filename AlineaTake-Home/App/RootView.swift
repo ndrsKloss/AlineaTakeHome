@@ -20,6 +20,25 @@ struct RootView: View {
                 }
                 #endif
         }
+        // Follows the system appearance (`NFR-THEME-002`); `nil` leaves it
+        // untouched. A DEBUG launch argument (`-uiStyleOverride dark|light`)
+        // pins it so UI tests can exercise both appearances — there is no
+        // supported launch arg for appearance the way there is for Dynamic Type.
+        .preferredColorScheme(colorSchemeOverride)
+    }
+
+    /// The appearance forced by a UI test via `-uiStyleOverride`, or `nil` to
+    /// follow the system. Release builds always follow the system.
+    private var colorSchemeOverride: ColorScheme? {
+        #if DEBUG
+        switch UserDefaults.standard.string(forKey: "uiStyleOverride") {
+        case "dark": return .dark
+        case "light": return .light
+        default: return nil
+        }
+        #else
+        return nil
+        #endif
     }
 
     private func makeAmountEntryView() -> some View {

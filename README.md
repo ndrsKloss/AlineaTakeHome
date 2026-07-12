@@ -123,18 +123,26 @@ xcodebuild -project AlineaTake-Home.xcodeproj -scheme AlineaTake-Home \
 
 ### Tests
 
-Swift Testing (`@Test` / `#expect`) in the `AlineaTake-HomeTests` target — 41
-tests across the entry model, formatter, view model, and accessibility (spoken
-VoiceOver values + per-language localized labels):
+Swift Testing (`@Test` / `#expect`) in the `AlineaTake-HomeTests` target — 58
+tests across the entry model, formatter, and view model, plus the cross-cutting
+NFRs: accessibility (spoken VoiceOver values + per-language localized labels),
+semantic colors resolving per light/dark appearance, the scalable keypad
+typography (Dynamic Type), and view-model locale wiring across en / pt-BR / es:
 
 ```bash
 xcodebuild test -project AlineaTake-Home.xcodeproj -scheme AlineaTake-Home \
   -destination "id=<simulator-udid>"
 ```
 
-A separate `AlineaTake-HomeUITests` XCUITest target (`VoiceOverLocalizationUITests`)
-drives the real accessibility tree in each language (en / pt-BR / es), asserting
-the localized VoiceOver labels and running Apple's automated accessibility audit.
+A separate `AlineaTake-HomeUITests` XCUITest target drives the **real
+accessibility tree** and runs Apple's automated accessibility audit:
+
+- `VoiceOverLocalizationUITests` — asserts the localized VoiceOver labels in each
+  language (en / pt-BR / es).
+- `AppearanceAndDynamicTypeUITests` — relaunches the screen across every
+  combination of language × appearance (light / dark) × text size
+  (default / accessibility) and verifies it stays labeled, hit-testable, and
+  audit-clean.
 
 ### Testing locale & appearance
 
