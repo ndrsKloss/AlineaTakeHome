@@ -47,11 +47,14 @@ struct DesignSystemCatalogView: View {
                     swatch("backgroundPrimary", .backgroundPrimary)
                     swatch("textPrimary", .textPrimary)
                     swatch("textPlaceholder", .textPlaceholder)
+                    swatch("amountValue", .amountValue)
                     swatch("surfaceChip", .surfaceChip)
                     swatch("brandGradientStart", .brandGradientStart)
                     swatch("brandGradientEnd", .brandGradientEnd)
                     swatch("onBrand", .onBrand)
                     swatch("primaryButtonSurface", .primaryButtonSurface)
+                    swatch("primaryButtonRim", .primaryButtonRim)
+                    gradientSwatch("halo", .halo)
                 }
 
                 section("Typography") {
@@ -129,9 +132,23 @@ struct DesignSystemCatalogView: View {
     }
 
     private func swatch(_ name: String, _ color: Color) -> some View {
-        HStack(spacing: .spacingMedium) {
+        swatchRow(name) { RoundedRectangle(cornerRadius: 6).fill(color) }
+    }
+
+    /// Swatch for a `Gradient` token (e.g. the special-button `halo`), filled as a
+    /// left-to-right `LinearGradient` so the stops read across the chip.
+    private func gradientSwatch(_ name: String, _ gradient: Gradient) -> some View {
+        swatchRow(name) {
             RoundedRectangle(cornerRadius: 6)
-                .fill(color)
+                .fill(LinearGradient(gradient: gradient, startPoint: .leading, endPoint: .trailing))
+        }
+    }
+
+    /// Shared swatch chrome — the 44×28 rounded fill with a hairline stroke and a
+    /// trailing token name — parameterized on the fill shape.
+    private func swatchRow(_ name: String, @ViewBuilder fill: () -> some View) -> some View {
+        HStack(spacing: .spacingMedium) {
+            fill()
                 .frame(width: 44, height: 28)
                 .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(.gray.opacity(0.4)))
             Text(name).textStyle(.chip).foregroundStyle(Color.textPrimary)
