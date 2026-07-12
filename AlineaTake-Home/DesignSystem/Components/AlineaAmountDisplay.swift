@@ -85,40 +85,14 @@ struct AlineaAmountDisplay: View {
     }
 
     private func glyphs(_ string: String) -> some View {
-        // A hidden twin drives layout with the width animation suppressed, so
-        // the frame snaps to the final width immediately; the visible text in
-        // its overlay is then always proposed that final size, and the value
-        // crossfade plays inside an already-final frame. Without this, the
-        // frame interpolates old→new width while the incoming string lays out
-        // at full size, and the glyph nearest the moving edge (the leading
-        // `$`) is clipped mid-animation. The `.transaction` scope ends before
-        // `.overlay`, so the visible text keeps the animated transaction from
-        // the screen's `withAnimation` (value + branch crossfades).
-        //
-        // The snap is directional: clipping only happens while the frame
-        // *grows* (mid-animation frame narrower than the final-size content).
-        // When the edit can only shorten the text (delete — flagged by the
-        // screen via `Transaction.amountMayShrink`), the mid-animation frame
-        // is always at least as wide as the final content, so the width is
-        // left animated: the value glides narrower with the caret instead of
-        // snapping in one frame.
+        // Blur-crossfade the whole value on edits: `.id` swaps the view
+        // identity per string, so the outgoing value blurs + fades out while
+        // the incoming one blurs in. The animation transaction is owned by
+        // `AmountEntryView` (its `withAnimation` also gates Reduce Motion).
         glyphText(string)
-            .hidden()
-            .transaction { txn in
-                if !txn.amountMayShrink {
-                    txn.animation = nil
-                }
-            }
-            .overlay(
-                glyphText(string)
-                    .foregroundStyle(valueFill)
-                    // Blur-crossfade the whole value on edits: `.id` swaps the
-                    // view identity per string, so the outgoing value blurs +
-                    // fades out while the incoming one blurs in. The animation
-                    // transaction is owned by `AmountEntryView`.
-                    .transition(Self.valueSwap)
-                    .id(string)
-            )
+            .foregroundStyle(valueFill)
+            .transition(Self.valueSwap)
+            .id(string)
     }
 
     /// The value-edit transition: opacity combined with a soft blur, so a
@@ -131,8 +105,8 @@ struct AlineaAmountDisplay: View {
         )
     )
 
-    /// The shared text configuration for the layout twin and the visible copy —
-    /// both must agree on size so the §10.7 long-amount shrink still applies.
+    /// The display-styled amount text: the §10.7 long-amount shrink
+    /// (`minimumScaleFactor`) keeps very wide values on one line.
     private func glyphText(_ string: String) -> some View {
         Text(verbatim: string)
             .textStyle(.display)
@@ -165,26 +139,6 @@ private struct BlurModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content.blur(radius: radius)
-    }
-}
-
-/// Marks a transaction as an amount edit that can only *shorten* the text
-/// (delete). `AlineaAmountDisplay` reads it to decide whether the value frame
-/// may animate its width: shrinking never clips (the frame stays at least as
-/// wide as the final content mid-animation), so the deleted digit gets to roll
-/// out; the default `false` keeps the snap-to-final-width behavior that
-/// protects growing edits from edge clipping.
-enum AmountShrinkTransactionKey: TransactionKey {
-    static let defaultValue = false
-}
-
-extension Transaction {
-    /// Whether the current amount edit can only shorten the displayed text.
-    /// Set by the screen (`AmountEntryView`) on delete; read by
-    /// `AlineaAmountDisplay`'s hidden layout twin.
-    var amountMayShrink: Bool {
-        get { self[AmountShrinkTransactionKey.self] }
-        set { self[AmountShrinkTransactionKey.self] = newValue }
     }
 }
 

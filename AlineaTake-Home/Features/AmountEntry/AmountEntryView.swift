@@ -142,13 +142,7 @@ struct AmountEntryView: View {
     }
 
     private func tapDelete() {
-        // Delete can only shorten the text, so the display is allowed to
-        // animate its width shrink (the value glides narrower while it
-        // crossfades) instead of snapping to the final width like growing
-        // edits must.
-        var transaction = Transaction(animation: amountEditAnimation)
-        transaction.amountMayShrink = true
-        withTransaction(transaction) { viewModel.didTapDelete() }
+        withAnimation(amountEditAnimation) { viewModel.didTapDelete() }
     }
 
     private func selectSuggestion(_ value: Int) {
