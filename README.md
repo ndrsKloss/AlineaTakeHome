@@ -11,6 +11,15 @@
 ▶︎ **[Watch the demo](docs/demo.mp4)** — click any screenshot above (or the link)
 to play the recording. State A and State B mirror the Figma example.
 
+### Localization
+
+[<img src="docs/demo-localization-poster.png" width="240" alt="Localization demo — click to play">](docs/demo-localization.mp4)
+
+▶︎ **[Watch the localization demo](docs/demo-localization.mp4)** — the same screen
+relaunched via `./test-locale.sh` across **English**, **Spanish (Spain)**, and
+**Brazilian Portuguese** (dark mode), showing locale-aware copy, currency, and
+number formatting.
+
 ---
 
 Built spec-first — the design, non-functional requirements, and architecture are
