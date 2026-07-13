@@ -178,3 +178,28 @@ settings (defaults to the iPhone 17 Pro simulator):
 ./test-locale.sh ptBR dark     # pt-BR, dark
 ./test-locale.sh en light      # en-US, light
 ```
+
+### Trying VoiceOver
+
+Every spoken label — the amount, chips, keypad digits/decimal, Delete, Back,
+Review, and the AUTOMATED badge — carries a **BCP-47 speech-language hint**
+(`AttributedString.languageIdentifier`, derived from the active locale via
+`AmountEntryViewModel.voiceOverLanguageIdentifier`). VoiceOver then pronounces
+the localized copy in its **own** language ("dois", not "two") regardless of the
+global VoiceOver voice.
+
+Two things to know when testing:
+
+- **The `-AppleLanguages` override doesn't change VoiceOver's voice.** That voice
+  is a global system setting (Settings → Accessibility → VoiceOver → Speech),
+  independent of any per-app locale override — the speech hint is what steers
+  pronunciation per-string.
+- **The Simulator can't run the real VoiceOver screen reader.** For an audible
+  check use a **physical device**: install a Portuguese (Brazil) voice, leave the
+  global voice on English, run under pt-BR — labels and numerals should speak in
+  Portuguese. On the Simulator, use **Xcode → Open Developer Tool → Accessibility
+  Inspector** (point it at the Simulator) to inspect each element's label/traits
+  and run the automated audit.
+
+The hint only takes effect when the target-language voice is installed; otherwise
+VoiceOver falls back to the global voice.

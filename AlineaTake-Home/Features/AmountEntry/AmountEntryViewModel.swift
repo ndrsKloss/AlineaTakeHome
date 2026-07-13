@@ -79,6 +79,15 @@ final class AmountEntryViewModel {
         locale.decimalSeparator ?? "."
     }
 
+    /// BCP-47 language tag for VoiceOver speech-language hints (e.g. `"pt-BR"`),
+    /// derived from the active `locale` so spoken labels are pronounced in the
+    /// content language regardless of the global VoiceOver voice (`NFR-LOC-009`).
+    /// Same locale that formats the amount, so the spoken phrase and its
+    /// pronunciation hint always agree.
+    var voiceOverLanguageIdentifier: String {
+        locale.identifier(.bcp47)
+    }
+
     // MARK: Suggestions
 
     /// Quick-amount whole values (design-spec §10). Labels are locale-formatted on

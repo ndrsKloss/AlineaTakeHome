@@ -17,6 +17,7 @@ import SwiftUI
 struct AlineaChip: View {
     private let title: String
     private let accessibilityLabel: String?
+    private let languageIdentifier: String?
     private let action: () -> Void
 
     /// - Parameters:
@@ -24,10 +25,19 @@ struct AlineaChip: View {
     ///   - accessibilityLabel: Optional VoiceOver reading. When `nil`, the
     ///     verbatim `title` is spoken; callers pass a natural spoken currency
     ///     phrase so VoiceOver doesn't read the raw symbol string (`NFR-LOC-009`).
+    ///   - languageIdentifier: Optional BCP-47 tag (e.g. `"pt-BR"`) so VoiceOver
+    ///     pronounces the label in the content language regardless of the global
+    ///     voice (`NFR-LOC-009`). `nil` ⇒ the global voice, as before.
     ///   - action: Reported on tap.
-    init(_ title: String, accessibilityLabel: String? = nil, action: @escaping () -> Void) {
+    init(
+        _ title: String,
+        accessibilityLabel: String? = nil,
+        languageIdentifier: String? = nil,
+        action: @escaping () -> Void
+    ) {
         self.title = title
         self.accessibilityLabel = accessibilityLabel
+        self.languageIdentifier = languageIdentifier
         self.action = action
     }
 
@@ -42,7 +52,7 @@ struct AlineaChip: View {
                 .contentShape(.capsule)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(Text(verbatim: accessibilityLabel ?? title))
+        .accessibilityLabel(Text.spoken(accessibilityLabel ?? title, language: languageIdentifier))
     }
 }
 

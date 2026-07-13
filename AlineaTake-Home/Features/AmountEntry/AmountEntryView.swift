@@ -40,12 +40,18 @@ struct AmountEntryView: View {
                                 .foregroundStyle(Color.textPrimary)
                                 .frame(width: 36, height: 36)
                         }
-                        .accessibilityLabel(Strings.back)
+                        .accessibilityLabel(Text.spoken(Strings.back, language: viewModel.voiceOverLanguageIdentifier))
                     },
                     center: {
                         // Present in both states (design-spec §3.0 — the two
                         // states share the badge).
-                        AlineaAutomatedBadge(Strings.automated)
+                        AlineaAutomatedBadge(
+                            Strings.automated,
+                            accessibilityLabel: Text.spoken(
+                                Strings.automatedText,
+                                language: viewModel.voiceOverLanguageIdentifier
+                            )
+                        )
                     },
                     trailing: {
                         #if DEBUG
@@ -70,7 +76,8 @@ struct AmountEntryView: View {
                     viewModel.amountText,
                     isPlaceholder: viewModel.isAmountPlaceholder,
                     showCaret: true,
-                    accessibilityLabel: viewModel.amountAccessibilityLabel
+                    accessibilityLabel: viewModel.amountAccessibilityLabel,
+                    languageIdentifier: viewModel.voiceOverLanguageIdentifier
                 )
                 .padding(.horizontal, .defaultMargins)
 
@@ -82,6 +89,7 @@ struct AmountEntryView: View {
                 AlineaKeyboard(
                     decimalSeparator: viewModel.decimalSeparator,
                     isDecimalEnabled: viewModel.isDecimalEnabled,
+                    languageIdentifier: viewModel.voiceOverLanguageIdentifier,
                     onDigit: tapDigit,
                     onDecimal: tapDecimal,
                     onDelete: tapDelete
@@ -105,7 +113,13 @@ struct AmountEntryView: View {
                 suggestionRow
                     .transition(bandTransition)
             } else {
-                AlineaSpecialButton(Strings.review) {
+                AlineaSpecialButton(
+                    Strings.review,
+                    accessibilityLabel: Text.spoken(
+                        Strings.reviewText,
+                        language: viewModel.voiceOverLanguageIdentifier
+                    )
+                ) {
                     viewModel.didTapReview()
                 }
                 .padding(.horizontal, .screenMarginButton)
@@ -207,7 +221,8 @@ struct AmountEntryView: View {
                 ForEach(viewModel.suggestions, id: \.self) { value in
                     AlineaChip(
                         viewModel.suggestionLabel(value),
-                        accessibilityLabel: viewModel.suggestionAccessibilityLabel(value)
+                        accessibilityLabel: viewModel.suggestionAccessibilityLabel(value),
+                        languageIdentifier: viewModel.voiceOverLanguageIdentifier
                     ) {
                         selectSuggestion(value)
                     }
@@ -263,6 +278,19 @@ private enum Strings {
     static let back = String(
         localized: "Back",
         comment: "Back action on the amount entry screen"
+    )
+
+    /// Resolved-string companions to the `LocalizedStringKey` labels above, used
+    /// only to build VoiceOver labels that carry a speech-language hint (a
+    /// `LocalizedStringKey` can't). Same catalog keys as `review` / `automated` —
+    /// keep the literals in sync.
+    static let reviewText = String(
+        localized: "Review",
+        comment: "VoiceOver label for the Review button"
+    )
+    static let automatedText = String(
+        localized: "AUTOMATED",
+        comment: "VoiceOver label for the AUTOMATED badge"
     )
 
     #if DEBUG

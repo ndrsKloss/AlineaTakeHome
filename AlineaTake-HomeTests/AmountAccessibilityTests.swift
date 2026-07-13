@@ -80,6 +80,31 @@ import Testing
         #expect(enText.localizedCaseInsensitiveContains("dollar"))
     }
 
+    // MARK: Speech-language hint (VoiceOver pronounces copy in its own voice)
+
+    /// The view model derives the BCP-47 tag VoiceOver needs to pick a matching
+    /// voice, from its injected formatting locale — the same locale that formats
+    /// the amount, so phrase and pronunciation always agree (`NFR-LOC-009`).
+    @Test func voiceOverLanguageIdentifierFollowsTheInjectedLocale() {
+        #expect(makeViewModel(en).voiceOverLanguageIdentifier == "en-US")
+        #expect(makeViewModel(ptBR).voiceOverLanguageIdentifier == "pt-BR")
+        #expect(makeViewModel(esES).voiceOverLanguageIdentifier == "es-ES")
+        #expect(makeViewModel(esMX).voiceOverLanguageIdentifier == "es-MX")
+    }
+
+    /// The helper stamps the language attribute onto the whole string so VoiceOver
+    /// reads it in that language; a `nil`/empty id leaves it unhinted (global voice).
+    @Test func speechHelperAttachesTheLanguageAttribute() {
+        let hinted = AccessibilitySpeech.attributed("dois mil reais", language: "pt-BR")
+        #expect(hinted.runs.allSatisfy { $0.languageIdentifier == "pt-BR" })
+        #expect(String(hinted.characters) == "dois mil reais")
+
+        #expect(AccessibilitySpeech.attributed("two thousand", language: nil)
+            .runs.allSatisfy { $0.languageIdentifier == nil })
+        #expect(AccessibilitySpeech.attributed("two thousand", language: "")
+            .runs.allSatisfy { $0.languageIdentifier == nil })
+    }
+
     // MARK: Accessibility labels are translated in every shipped language
 
     @Test func accessibilityLabelsAreTranslatedInPortuguese() {
@@ -110,6 +135,10 @@ import Testing
 
     private func typing(_ digits: [Int]) -> AmountEntry {
         digits.reduce(into: AmountEntry()) { $0 = $0.appending(digit: $1) }
+    }
+
+    private func makeViewModel(_ locale: Locale) -> AmountEntryViewModel {
+        AmountEntryViewModel(coordinator: MockAmountEntryCoordinator(), locale: locale)
     }
 
     /// The `.lproj` bundle for a language, so string lookup is pinned to that

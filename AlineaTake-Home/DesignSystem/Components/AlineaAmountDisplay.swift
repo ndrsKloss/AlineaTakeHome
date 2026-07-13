@@ -21,6 +21,7 @@ struct AlineaAmountDisplay: View {
     private let isPlaceholder: Bool
     private let showCaret: Bool
     private let accessibilityLabel: String?
+    private let languageIdentifier: String?
 
     /// - Parameters:
     ///   - text: The pre-formatted amount (e.g. `"$0"`, `"$2,000"`). Verbatim —
@@ -33,22 +34,27 @@ struct AlineaAmountDisplay: View {
     ///     verbatim `text` is spoken; callers pass a natural spoken currency
     ///     phrase (e.g. "2.000 reais brasileiros") so VoiceOver doesn't read the
     ///     raw symbol string (`NFR-LOC-009`).
+    ///   - languageIdentifier: Optional BCP-47 tag (e.g. `"pt-BR"`) so VoiceOver
+    ///     pronounces the label in the content language regardless of the global
+    ///     voice (`NFR-LOC-009`). `nil` ⇒ the global voice, as before.
     init(
         _ text: String,
         isPlaceholder: Bool,
         showCaret: Bool = false,
-        accessibilityLabel: String? = nil
+        accessibilityLabel: String? = nil,
+        languageIdentifier: String? = nil
     ) {
         self.text = text
         self.isPlaceholder = isPlaceholder
         self.showCaret = showCaret
         self.accessibilityLabel = accessibilityLabel
+        self.languageIdentifier = languageIdentifier
     }
 
     var body: some View {
         content
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text(verbatim: accessibilityLabel ?? text))
+            .accessibilityLabel(Text.spoken(accessibilityLabel ?? text, language: languageIdentifier))
             .accessibilityIdentifier("amountDisplay")
     }
 

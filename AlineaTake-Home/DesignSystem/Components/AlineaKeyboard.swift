@@ -13,6 +13,10 @@ struct AlineaKeyboard: View {
     /// Whether the decimal key accepts taps. The business rule lives in the view
     /// model (design-spec §12 Q1); the component only reflects it.
     var isDecimalEnabled: Bool
+    /// Optional BCP-47 tag (e.g. `"pt-BR"`) so VoiceOver pronounces the keys —
+    /// digits, decimal separator, and the localized Delete label — in the content
+    /// language regardless of the global voice (`NFR-LOC-009`). `nil` ⇒ global voice.
+    var languageIdentifier: String?
     let onDigit: (Int) -> Void
     let onDecimal: () -> Void
     let onDelete: () -> Void
@@ -20,12 +24,14 @@ struct AlineaKeyboard: View {
     init(
         decimalSeparator: String = ".",
         isDecimalEnabled: Bool = true,
+        languageIdentifier: String? = nil,
         onDigit: @escaping (Int) -> Void,
         onDecimal: @escaping () -> Void,
         onDelete: @escaping () -> Void
     ) {
         self.decimalSeparator = decimalSeparator
         self.isDecimalEnabled = isDecimalEnabled
+        self.languageIdentifier = languageIdentifier
         self.onDigit = onDigit
         self.onDecimal = onDecimal
         self.onDelete = onDelete
@@ -73,9 +79,9 @@ struct AlineaKeyboard: View {
     private func keyView(_ key: Key) -> some View {
         switch key {
         case .digit(let value):
-            AlineaNumber("\(value)") { onDigit(value) }
+            AlineaNumber("\(value)", languageIdentifier: languageIdentifier) { onDigit(value) }
         case .decimal:
-            AlineaNumber(decimalSeparator, isEnabled: isDecimalEnabled) { onDecimal() }
+            AlineaNumber(decimalSeparator, isEnabled: isDecimalEnabled, languageIdentifier: languageIdentifier) { onDecimal() }
         case .delete:
             deleteKey
         }
@@ -92,7 +98,7 @@ struct AlineaKeyboard: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(Strings.delete)
+        .accessibilityLabel(Text.spoken(Strings.delete, language: languageIdentifier))
         .accessibilityAddTraits(.isKeyboardKey)
     }
 }

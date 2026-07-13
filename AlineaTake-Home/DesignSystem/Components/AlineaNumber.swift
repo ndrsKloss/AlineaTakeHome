@@ -11,15 +11,25 @@ import SwiftUI
 struct AlineaNumber: View {
     private let label: String
     private let isEnabled: Bool
+    private let languageIdentifier: String?
     private let action: () -> Void
 
+    /// - Parameters:
+    ///   - label: The verbatim key glyph (a digit or the decimal separator).
+    ///   - isEnabled: Whether the key accepts taps.
+    ///   - languageIdentifier: Optional BCP-47 tag (e.g. `"pt-BR"`) so VoiceOver
+    ///     pronounces the numeral in the content language ("dois", not "two")
+    ///     regardless of the global voice (`NFR-LOC-009`). `nil` ⇒ global voice.
+    ///   - action: Reported on tap.
     init(
         _ label: String,
         isEnabled: Bool = true,
+        languageIdentifier: String? = nil,
         action: @escaping () -> Void
     ) {
         self.label = label
         self.isEnabled = isEnabled
+        self.languageIdentifier = languageIdentifier
         self.action = action
     }
 
@@ -33,6 +43,7 @@ struct AlineaNumber: View {
         }
         .buttonStyle(.plain)
         .disabled(!isEnabled)
+        .accessibilityLabel(Text.spoken(label, language: languageIdentifier))
         .accessibilityAddTraits(.isKeyboardKey)
     }
 }

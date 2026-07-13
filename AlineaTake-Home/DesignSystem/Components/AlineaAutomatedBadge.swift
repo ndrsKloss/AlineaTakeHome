@@ -8,6 +8,7 @@ import SwiftUI
 /// source asset is a static image), so there is no motion.
 struct AlineaAutomatedBadge: View {
     private let title: LocalizedStringKey
+    private let accessibilityLabel: Text?
 
     /// The Figma text box is 12pt high (line-height 11.4) — shorter than GT
     /// Flexa's natural line height, which would inflate the pill to ~24pt.
@@ -16,10 +17,16 @@ struct AlineaAutomatedBadge: View {
     /// user's text size (`NFR-A11Y-002`).
     @ScaledMetric(relativeTo: .caption) private var labelHeight: CGFloat = Layout.labelHeight
 
-    /// - Parameter title: Localizable label copy (`NFR-LOC-002`) — translated
-    ///   text, like `AlineaSpecialButton`'s label. Styling is component-owned.
-    init(_ title: LocalizedStringKey) {
+    /// - Parameters:
+    ///   - title: Localizable label copy (`NFR-LOC-002`) — translated text, like
+    ///     `AlineaSpecialButton`'s label. Styling is component-owned.
+    ///   - accessibilityLabel: Optional VoiceOver label. The visible `title` is a
+    ///     `LocalizedStringKey`, which can't carry a speech-language hint, so a
+    ///     caller wanting one passes a hinted `Text` (`Text.spoken(_:language:)`);
+    ///     `nil` ⇒ VoiceOver reads the visible title with the global voice.
+    init(_ title: LocalizedStringKey, accessibilityLabel: Text? = nil) {
         self.title = title
+        self.accessibilityLabel = accessibilityLabel
     }
 
     var body: some View {
@@ -43,6 +50,7 @@ struct AlineaAutomatedBadge: View {
                     .mask(Capsule().strokeBorder(lineWidth: Layout.borderWidth))
                     .accessibilityHidden(true)
             )
+            .accessibilityLabel(accessibilityLabel ?? Text(title))
     }
 }
 

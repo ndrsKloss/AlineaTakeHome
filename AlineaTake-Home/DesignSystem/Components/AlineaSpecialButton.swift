@@ -10,17 +10,24 @@ import SwiftUI
 /// is disabled under Reduce Motion (`NFR-A11Y`).
 struct AlineaSpecialButton: View {
     private let title: LocalizedStringKey
+    private let accessibilityLabel: Text?
     private let action: () -> Void
 
     /// - Parameters:
     ///   - title: Localizable label copy (`NFR-LOC`). Unlike `AlineaChip`, which
     ///     shows verbatim pre-formatted amounts, this label is translated text.
+    ///   - accessibilityLabel: Optional VoiceOver label. The visible `title` is a
+    ///     `LocalizedStringKey`, which can't carry a speech-language hint, so a
+    ///     caller wanting one passes a hinted `Text` (`Text.spoken(_:language:)`);
+    ///     `nil` ⇒ VoiceOver reads the visible title with the global voice.
     ///   - action: Reported on tap; behavior is owned by the caller.
     init(
         _ title: LocalizedStringKey,
+        accessibilityLabel: Text? = nil,
         action: @escaping () -> Void
     ) {
         self.title = title
+        self.accessibilityLabel = accessibilityLabel
         self.action = action
     }
 
@@ -49,6 +56,7 @@ struct AlineaSpecialButton: View {
                 .contentShape(.capsule)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(accessibilityLabel ?? Text(title))
     }
 }
 
